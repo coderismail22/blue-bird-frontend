@@ -1,0 +1,46 @@
+/* customClass: {
+  title: "custom-title",
+  popup: "custom-popup",
+  icon: "custom-icon",
+  confirmButton: "custom-confirm-btn",
+} */
+.custom-title {
+  color: #65e8da; /* Blue title */
+  font-size: 25px;
+}
+
+.custom-popup {
+  /* background: linear-gradient(135deg, #ff0084, #3300ff); */
+  background: linear-gradient(135deg, #1d3c6e, #b24e99);
+  color: #eee4e4;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.custom-confirm-btn {
+  background: linear-gradient(
+    135deg,
+    #6a82fb,
+    #fc5c7d
+  ); /* New appealing gradient */
+  color: rgb(10, 10, 10);
+  padding: 12px 24px; /* Adjusting the padding for better size */
+  border-radius: 8px; /* Soft rounded corners */
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Light shadow */
+  transition: background 0.5s ease-in-out, color 0.3s ease, box-shadow 0.3s ease,
+    transform 0.2s ease-in-out; /* Added transform transition for smooth scaling */
+}
+.custom-confirm-btn:hover {
+  background: linear-gradient(
+    135deg,
+    #fc5c7d,
+    #6a82fb
+  ); /* Reverse gradient for hover effect */
+  color: rgb(255, 255, 255); /* White text */
+  font-weight: 700; /* Bold text on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+  transform: translateY(-4px); /* Slight lifting effect */
+}
