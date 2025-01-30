@@ -29,6 +29,8 @@ import PublishAdministration from "@/Pages/Dashboard/Admin/Administration/Publis
 import EditAdministration from "@/Pages/Dashboard/Admin/Administration/EditAdministration";
 import NoticeBanner from "@/Pages/Dashboard/Admin/NoticeBanner/NoticeBanner";
 import Login from "@/components/Auth/Login/Login";
+import EditStudent from "@/Pages/Dashboard/Admin/Student Management/EditStudent";
+import FullStudentInfo from "@/Pages/Dashboard/Admin/Student Management/FullStudentInfo";
 
 export const router = createBrowserRouter([
   {
@@ -125,6 +127,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/admin/student-management/student-info-page",
         element: <StudentInfo />,
+      },
+      {
+        path: "/dashboard/admin/student-management/edit-student/:studentId",
+        element: <EditStudent />,
+      },
+      {
+        path: "/dashboard/admin/student-management/full-student-info/:studentId",
+        element: <FullStudentInfo />,
       },
       // Role: Teacher
 

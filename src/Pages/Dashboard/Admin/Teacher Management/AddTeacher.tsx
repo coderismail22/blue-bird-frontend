@@ -36,7 +36,7 @@ const AddTeacher = () => {
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
- 
+
   // Mutation for creating a teacher
   const mutation = useMutation({
     mutationFn: createTeacher,

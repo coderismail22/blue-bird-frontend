@@ -12,134 +12,162 @@ import Loader from "@/components/Loader/Loader";
 import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
+import AppYearPicker from "@/components/CustomForm/AppYearPicker";
 
-// Fetch teacher by ID
-const fetchTeacherById = async (teacherId: string) => {
-  const response = await axiosInstance.get(`/teachers/${teacherId}`);
+// ✅ Fetch student by ID
+const fetchStudentById = async (studentId: string) => {
+  const response = await axiosInstance.get(`/students/${studentId}`);
   return response.data;
 };
 
-// Update teacher function
-const updateTeacher = async (
-  teacherId: string,
+// ✅ Update student function
+const updateStudent = async (
+  studentId: string,
   data: {
     name: string;
-    teacherId: string;
+    studentId: string;
     profileImg: string;
     email: string;
     password: string;
     phone: string;
-    bloodGroup: string;
-    salary: number;
+    guardianName: string;
     address: string;
+    bloodGroup: string;
+    year: string;
+    version: string;
+    shift: string;
+    class: string;
+    section: string;
+    group: string;
   }
 ) => {
   const response = await axiosInstance.patch(
-    `/users/update-teacher/${teacherId}`,
+    `/users/update-student/${studentId}`,
     data
   );
   return response.data;
 };
 
-const EditTeacher = () => {
+const EditStudent = () => {
   const [profileImg, setProfileImg] = useState<string>("");
-  const { teacherId } = useParams<{ teacherId: string }>();
+  const { studentId } = useParams<{ studentId: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // Fetch teacher details
+  // ✅ Fetch student details
   const {
-    data: teacher,
-    isLoading: isLoadingTeacher,
-    error: teacherError,
+    data: student,
+    isLoading: isLoadingStudent,
+    error: studentError,
   } = useQuery({
-    queryKey: ["teacher", teacherId],
-    queryFn: () => fetchTeacherById(teacherId!),
-    enabled: !!teacherId,
+    queryKey: ["student", studentId],
+    queryFn: () => fetchStudentById(studentId!),
+    enabled: !!studentId,
   });
 
-  // Mutation for updating teacher
+
+  // ✅ Mutation for updating student
   const mutation = useMutation({
     mutationFn: (data: {
       name: string;
-      teacherId: string;
+      studentId: string;
       profileImg: string;
       email: string;
       password: string;
       phone: string;
-      bloodGroup: string;
-      salary: number;
+      guardianName: string;
       address: string;
-    }) => updateTeacher(teacherId!, data),
+      bloodGroup: string;
+      year: string;
+      version: string;
+      shift: string;
+      class: string;
+      section: string;
+      group: string;
+    }) => updateStudent(studentId!, data),
     onSuccess: () => {
-      Swal.fire("Success!", "Teacher updated successfully!", "success");
-      queryClient.invalidateQueries({ queryKey: ["teachers"] });
-      navigate("/dashboard/admin/teacher-management/all-teachers");
+      Swal.fire("Success!", "Student updated successfully!", "success");
+      queryClient.invalidateQueries({ queryKey: ["students"] });
+      navigate("/dashboard/admin/student-management/student-info-page");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
       console.log(err);
-      handleAxiosError(err, "Failed to update teacher");
+      handleAxiosError(err, "Failed to update student");
     },
   });
 
   const onSubmit = (data: {
     name: string;
-    teacherId: string;
+    studentId: string;
     profileImg: string;
     email: string;
     password: string;
     phone: string;
-    bloodGroup: string;
-    salary: number;
+    guardianName: string;
     address: string;
+    bloodGroup: string;
+    year: string;
+    version: string;
+    shift: string;
+    class: string;
+    section: string;
+    group: string;
   }) => {
     const finalData = {
       ...data,
-      profileImg: profileImg || teacher?.data?.profileImg,
+      profileImg: profileImg || student?.data?.profileImg,
     };
     mutation.mutate(finalData);
+    // console.log(finalData);
   };
 
-  if (isLoadingTeacher) return <Loader />;
-  if (teacherError) return <p>Something went wrong...</p>;
+  if (isLoadingStudent) return <Loader />;
+  if (studentError)
+    return <p className="text-red-500 text-center">Something went wrong...</p>;
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500">
-        Edit Teacher
+        Edit Student
       </h1>
       <AppForm
         onSubmit={onSubmit}
         defaultValues={{
-          name: teacher?.data?.name || "",
-          teacherId: teacher?.data?.teacherId || "",
-          email: teacher?.data?.email || "",
-          password: teacher?.data?.password || "",
-          address: teacher?.data?.address || "",
-          salary: teacher?.data?.salary || 0,
-          phone: teacher?.data?.phone || "",
-          bloodGroup: teacher?.data?.bloodGroup || "",
+          name: student?.data?.name || "",
+          studentId: student?.data?.studentId || "",
+          email: student?.data?.email || "",
+          password: student?.data?.password || "",
+          phone: student?.data?.phone || "",
+          guardianName: student?.data?.guardianName || "",
+          address: student?.data?.address || "",
+          bloodGroup: student?.data?.bloodGroup || "",
+          year: student?.data?.year || "",
+          version: student?.data?.version || "",
+          shift: student?.data?.shift || "",
+          class: student?.data?.class || "",
+          section: student?.data?.section || "",
+          group: student?.data?.group || "",
         }}
-        buttonText="Update Teacher"
+        buttonText="Update Student"
       >
-        {/* Teacher Name */}
+        {/* Student Name */}
         <AppInput
           name="name"
-          label="Teacher Name"
-          placeholder="Enter teacher name"
+          label="Student Name"
+          placeholder="Enter student name"
         />
 
-        {/* Teacher ID */}
+        {/* Student ID */}
         <AppInput
-          name="teacherId"
-          label="Teacher ID"
-          placeholder="Enter teacher ID"
+          name="studentId"
+          label="Student ID"
+          placeholder="Enter student ID"
         />
 
         {/* Image Upload Section */}
         <div className="text-sm truncate my-4">
           <label className="block font-medium text-black ">
-            Upload Cover Image
+            Upload Profile Image
           </label>
           <ImageUpload setUploadedImageUrl={setProfileImg} />
         </div>
@@ -159,13 +187,17 @@ const EditTeacher = () => {
         {/* Phone */}
         <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
 
-        {/* Salary */}
-        <AppInput name="salary" label="Salary" placeholder="Enter salary" />
+        {/* Guardian Name */}
+        <AppInput
+          name="guardianName"
+          label="Guardian Name"
+          placeholder="Enter guardian's name"
+        />
 
         {/* Address */}
-        <AppInput name="address" label="Address" placeholder="Enter Address" />
+        <AppInput name="address" label="Address" placeholder="Enter address" />
 
-        {/* Bloodgroup */}
+        {/* Blood Group */}
         <AppSelect
           name="bloodGroup"
           label="Blood Group"
@@ -181,9 +213,74 @@ const EditTeacher = () => {
             { value: "O-", label: "O-" },
           ]}
         />
+
+        {/* Year Picker */}
+        <AppYearPicker name="year" label="Year" />
+
+        {/* Version */}
+        <AppSelect
+          name="version"
+          label="Version"
+          placeholder="Select a version"
+          options={[
+            { value: "Bangla", label: "Bangla" },
+            { value: "English", label: "English" },
+          ]}
+        />
+
+        {/* Shift */}
+        <AppSelect
+          name="shift"
+          label="Shift"
+          placeholder="Select a shift"
+          options={[
+            { value: "Morning", label: "Morning" },
+            { value: "Day", label: "Day" },
+            { value: "Evening", label: "Evening" },
+          ]}
+        />
+
+        {/* Class */}
+        <AppSelect
+          name="class"
+          label="Class"
+          placeholder="Select a class"
+          options={[
+            { value: "7", label: "Seven" },
+            { value: "8", label: "Eight" },
+            { value: "9", label: "Nine" },
+            { value: "10", label: "Ten" },
+          ]}
+        />
+
+        {/* Section */}
+        <AppSelect
+          name="section"
+          label="Section"
+          placeholder="Select a section"
+          options={[
+            { value: "A", label: "A" },
+            { value: "B", label: "B" },
+            { value: "C", label: "C" },
+            { value: "D", label: "D" },
+          ]}
+        />
+
+        {/* Group (Optional) */}
+        <AppSelect
+          name="group"
+          label="Group (If Applicable)"
+          placeholder="Select a group"
+          options={[
+            { value: "Science", label: "Science" },
+            { value: "Arts", label: "Arts" },
+            { value: "Commerce", label: "Commerce" },
+            { value: "NA", label: "NA" },
+          ]}
+        />
       </AppForm>
     </div>
   );
 };
 
-export default EditTeacher;
+export default EditStudent;

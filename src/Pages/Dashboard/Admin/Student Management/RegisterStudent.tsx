@@ -11,6 +11,7 @@ import AppInputPassword from "@/components/CustomForm/AppInputPassword";
 import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
+import AppYearPicker from "@/components/CustomForm/AppYearPicker";
 
 // Register student function
 const registerStudent = async (studentData: {
@@ -23,10 +24,15 @@ const registerStudent = async (studentData: {
   guardianName: string;
   address: string;
   bloodGroup: string;
-  grade: string;
+  year: string;
+  version: string;
+  shift: string;
+  class: string;
+  section: string;
+  group: string;
 }) => {
   const response = await axiosInstance.post(
-    "/students/register",
+    "/users/register-student",
     studentData
   );
   return response.data;
@@ -44,7 +50,7 @@ const RegisterStudent = () => {
     onSuccess: () => {
       Swal.fire("Success!", "Student registered successfully!", "success");
       queryClient.invalidateQueries({ queryKey: ["students"] });
-      navigate("/dashboard/admin/student-management/all-students");
+      navigate("/dashboard/admin/student-management/register-student");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
       console.log(err);
@@ -62,7 +68,12 @@ const RegisterStudent = () => {
     guardianName: string;
     address: string;
     bloodGroup: string;
-    grade: string;
+    year: string;
+    version: string;
+    shift: string;
+    class: string;
+    section: string;
+    group: string;
   }) => {
     const finalData = {
       ...data,
@@ -70,6 +81,7 @@ const RegisterStudent = () => {
     };
 
     mutation.mutate(finalData);
+    // console.log(finalData);
   };
 
   return (
@@ -88,7 +100,12 @@ const RegisterStudent = () => {
           guardianName: "",
           address: "",
           bloodGroup: "",
-          grade: "",
+          year: "",
+          version: "",
+          shift: "",
+          class: "",
+          section: "",
+          group: "",
         }}
         buttonText="Register Student"
       >
@@ -130,11 +147,7 @@ const RegisterStudent = () => {
         />
 
         {/* Phone */}
-        <AppInput
-          name="phone"
-          label="Phone"
-          placeholder="Enter phone number"
-        />
+        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
 
         {/* Guardian Name */}
         <AppInput
@@ -144,11 +157,7 @@ const RegisterStudent = () => {
         />
 
         {/* Address */}
-        <AppInput
-          name="address"
-          label="Address"
-          placeholder="Enter address"
-        />
+        <AppInput name="address" label="Address" placeholder="Enter address" />
 
         {/* Blood Group */}
         <AppSelect
@@ -167,11 +176,69 @@ const RegisterStudent = () => {
           ]}
         />
 
-        {/* Grade */}
-        <AppInput
-          name="grade"
-          label="Grade"
-          placeholder="Enter student's grade"
+        {/* Year Picker */}
+        <AppYearPicker name="year" label="Year" />
+
+        {/* Version*/}
+        <AppSelect
+          name="version"
+          label="Version"
+          placeholder="Select a version"
+          options={[
+            { value: "Bangla", label: "Bangla" },
+            { value: "English", label: "English" },
+          ]}
+        />
+
+        {/* Shift */}
+        <AppSelect
+          name="shift"
+          label="Shift"
+          placeholder="Select a shift"
+          options={[
+            { value: "Morning", label: "Morning" },
+            { value: "Day", label: "Day" },
+            { value: "Evening", label: "Evening" },
+          ]}
+        />
+
+        {/* Class */}
+        <AppSelect
+          name="class"
+          label="Class"
+          placeholder="Select a class"
+          options={[
+            { value: "7", label: "Seven" },
+            { value: "8", label: "Eight" },
+            { value: "9", label: "Nine" },
+            { value: "10", label: "Ten" },
+          ]}
+        />
+
+        {/* Section */}
+        <AppSelect
+          name="section"
+          label="Section"
+          placeholder="Select a section"
+          options={[
+            { value: "A", label: "A" },
+            { value: "B", label: "B" },
+            { value: "C", label: "C" },
+            { value: "D", label: "D" },
+          ]}
+        />
+
+        {/* Group (Optional) */}
+        <AppSelect
+          name="group"
+          label="Group (If Applicable)"
+          placeholder="Select a group"
+          options={[
+            { value: "Science", label: "Science" },
+            { value: "Arts", label: "Arts" },
+            { value: "Commerce", label: "Commerce" },
+            { value: "NA", label: "NA" },
+          ]}
         />
       </AppForm>
     </div>
