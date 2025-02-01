@@ -14,8 +14,10 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 import {
   MdDownloading,
+  MdEditDocument,
   MdEmojiEvents,
   MdEventNote,
+  MdOutlineNoteAlt,
   MdOutlinePlayLesson,
 } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
@@ -145,7 +147,7 @@ export const sidebarData = {
     {
       label: "Notice Banner",
       path: "/dashboard/admin/banner-notice",
-      icon: HiLightBulb ,
+      icon: HiLightBulb,
     },
     {
       label: "Publish Notice",
@@ -186,6 +188,33 @@ export const sidebarData = {
           icon: FaRegListAlt,
           label: "Students",
           path: "/dashboard/admin/student-management/student-info-page",
+        },
+      ],
+    },
+    {
+      icon: MdEditDocument,
+      label: "Exam Management",
+      children: [
+        {
+          icon: IoMdAddCircleOutline,
+          label: "Add Exam",
+          path: "/dashboard/admin/exam-management/add-exam",
+        },
+        {
+          icon: FaRegListAlt,
+          label: "Exam Archive",
+          path: "/dashboard/admin/exam-management/exam-archive",
+        },
+      ],
+    },
+    {
+      icon: MdOutlineNoteAlt,
+      label: "Attendance",
+      children: [
+        {
+          icon: IoMdAddCircleOutline,
+          label: "Attendance",
+          path: "/dashboard/admin/attendance-management/take-attendance",
         },
       ],
     },

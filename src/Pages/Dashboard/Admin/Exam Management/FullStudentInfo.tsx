@@ -48,7 +48,6 @@ const FullStudentInfo = () => {
         <div className="flex-1 space-y-4 ">
           <DetailRow label="Name" value={student?.name} />
           <DetailRow label="Student ID" value={student?.studentId} />
-          <DetailRow label="Roll" value={student?.roll} />
           <DetailRow label="Email" value={student?.email} />
           <DetailRow label="Phone" value={student?.phone} />
           <DetailRow label="Guardian Name" value={student?.guardianName} />

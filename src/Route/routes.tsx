@@ -31,6 +31,8 @@ import NoticeBanner from "@/Pages/Dashboard/Admin/NoticeBanner/NoticeBanner";
 import Login from "@/components/Auth/Login/Login";
 import EditStudent from "@/Pages/Dashboard/Admin/Student Management/EditStudent";
 import FullStudentInfo from "@/Pages/Dashboard/Admin/Student Management/FullStudentInfo";
+import AddExam from "@/Pages/Dashboard/Admin/Exam Management/AddExam";
+import TakeAttendance from "@/Pages/Dashboard/AttendanceManagement/TakeAttendance";
 
 export const router = createBrowserRouter([
   {
@@ -135,6 +137,20 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/admin/student-management/full-student-info/:studentId",
         element: <FullStudentInfo />,
+      },
+      // Exam Management (TODO:Incomplete)
+      {
+        path: "/dashboard/admin/exam-management/add-exam",
+        element: <AddExam />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/exam-archive",
+        element: <StudentInfo />,
+      },
+      // Attendance
+      {
+        path: "/dashboard/admin/attendance-management/take-attendance",
+        element: <TakeAttendance />,
       },
       // Role: Teacher
 

@@ -1,68 +1,104 @@
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AppForm from "@/components/CustomForm/AppForm";
 import AppInput from "@/components/CustomForm/AppInput";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/api/axiosInstance";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import ImageUpload from "@/components/ImageUpload/ImageUpload";
-import { useState } from "react";
 import AppSelect from "@/components/CustomForm/AppSelect";
 import AppInputPassword from "@/components/CustomForm/AppInputPassword";
+import Swal from "sweetalert2";
+import axiosInstance from "@/api/axiosInstance";
+import ImageUpload from "@/components/ImageUpload/ImageUpload";
+import { useState } from "react";
+import Loader from "@/components/Loader/Loader";
 import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import AppYearPicker from "@/components/CustomForm/AppYearPicker";
 
-// Register student function
-const registerStudent = async (studentData: {
-  name: string;
-  studentId: string;
-  roll: string;
-  profileImg: string;
-  email: string;
-  password: string;
-  phone: string;
-  guardianName: string;
-  address: string;
-  bloodGroup: string;
-  year: string;
-  version: string;
-  shift: string;
-  class: string;
-  section: string;
-  group: string;
-}) => {
-  const response = await axiosInstance.post(
-    "/users/register-student",
-    studentData
+// ✅ Fetch student by ID
+const fetchStudentById = async (studentId: string) => {
+  const response = await axiosInstance.get(`/students/${studentId}`);
+  return response.data;
+};
+
+// ✅ Update student function
+const updateStudent = async (
+  studentId: string,
+  data: {
+    name: string;
+    studentId: string;
+    profileImg: string;
+    email: string;
+    password: string;
+    phone: string;
+    guardianName: string;
+    address: string;
+    bloodGroup: string;
+    year: string;
+    version: string;
+    shift: string;
+    class: string;
+    section: string;
+    group: string;
+  }
+) => {
+  const response = await axiosInstance.patch(
+    `/users/update-student/${studentId}`,
+    data
   );
   return response.data;
 };
 
-const RegisterStudent = () => {
-  const [profileImg, setProfileImg] = useState<string>(""); // Handle profile image
-
-  const queryClient = useQueryClient();
+const EditStudent = () => {
+  const [profileImg, setProfileImg] = useState<string>("");
+  const { studentId } = useParams<{ studentId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  // Mutation for registering a student
+  // ✅ Fetch student details
+  const {
+    data: student,
+    isLoading: isLoadingStudent,
+    error: studentError,
+  } = useQuery({
+    queryKey: ["student", studentId],
+    queryFn: () => fetchStudentById(studentId!),
+    enabled: !!studentId,
+  });
+
+
+  // ✅ Mutation for updating student
   const mutation = useMutation({
-    mutationFn: registerStudent,
+    mutationFn: (data: {
+      name: string;
+      studentId: string;
+      profileImg: string;
+      email: string;
+      password: string;
+      phone: string;
+      guardianName: string;
+      address: string;
+      bloodGroup: string;
+      year: string;
+      version: string;
+      shift: string;
+      class: string;
+      section: string;
+      group: string;
+    }) => updateStudent(studentId!, data),
     onSuccess: () => {
-      Swal.fire("Success!", "Student registered successfully!", "success");
+      Swal.fire("Success!", "Student updated successfully!", "success");
       queryClient.invalidateQueries({ queryKey: ["students"] });
-      navigate("/dashboard/admin/student-management/register-student");
+      navigate("/dashboard/admin/student-management/student-info-page");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
       console.log(err);
-      handleAxiosError(err, "Failed to register student");
+      handleAxiosError(err, "Failed to update student");
     },
   });
 
   const onSubmit = (data: {
     name: string;
     studentId: string;
-    roll: string;
     profileImg: string;
     email: string;
     password: string;
@@ -79,38 +115,40 @@ const RegisterStudent = () => {
   }) => {
     const finalData = {
       ...data,
-      profileImg,
+      profileImg: profileImg || student?.data?.profileImg,
     };
-
     mutation.mutate(finalData);
     // console.log(finalData);
   };
 
+  if (isLoadingStudent) return <Loader />;
+  if (studentError)
+    return <p className="text-red-500 text-center">Something went wrong...</p>;
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500">
-        Register Student
+        Edit Student
       </h1>
       <AppForm
         onSubmit={onSubmit}
         defaultValues={{
-          name: "",
-          studentId: "",
-          roll: "",
-          email: "",
-          password: "",
-          phone: "",
-          guardianName: "",
-          address: "",
-          bloodGroup: "",
-          year: "",
-          version: "",
-          shift: "",
-          class: "",
-          section: "",
-          group: "",
+          name: student?.data?.name || "",
+          studentId: student?.data?.studentId || "",
+          email: student?.data?.email || "",
+          password: student?.data?.password || "",
+          phone: student?.data?.phone || "",
+          guardianName: student?.data?.guardianName || "",
+          address: student?.data?.address || "",
+          bloodGroup: student?.data?.bloodGroup || "",
+          year: student?.data?.year || "",
+          version: student?.data?.version || "",
+          shift: student?.data?.shift || "",
+          class: student?.data?.class || "",
+          section: student?.data?.section || "",
+          group: student?.data?.group || "",
         }}
-        buttonText="Register Student"
+        buttonText="Update Student"
       >
         {/* Student Name */}
         <AppInput
@@ -125,12 +163,6 @@ const RegisterStudent = () => {
           label="Student ID"
           placeholder="Enter student ID"
         />
-        {/* Roll */}
-        <AppInput
-          name="roll"
-          label="Class Roll"
-          placeholder="Enter student class roll"
-        />
 
         {/* Image Upload Section */}
         <div className="text-sm truncate my-4">
@@ -138,9 +170,6 @@ const RegisterStudent = () => {
             Upload Profile Image
           </label>
           <ImageUpload setUploadedImageUrl={setProfileImg} />
-          {profileImg === "" && (
-            <p className="text-red-500 text-sm">Image is required</p>
-          )}
         </div>
 
         {/* Email */}
@@ -152,7 +181,7 @@ const RegisterStudent = () => {
           name="password"
           label="Password"
           labelStyles="text-black"
-          placeholder="Enter your password"
+          placeholder="Enter new password"
         />
 
         {/* Phone */}
@@ -188,7 +217,7 @@ const RegisterStudent = () => {
         {/* Year Picker */}
         <AppYearPicker name="year" label="Year" />
 
-        {/* Version*/}
+        {/* Version */}
         <AppSelect
           name="version"
           label="Version"
@@ -254,4 +283,4 @@ const RegisterStudent = () => {
   );
 };
 
-export default RegisterStudent;
+export default EditStudent;

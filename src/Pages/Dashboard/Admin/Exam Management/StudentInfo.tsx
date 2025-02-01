@@ -309,8 +309,7 @@ const StudentInfo = () => {
           <table className="w-full mt-4 border border-gray-300 text-left rounded-md">
             <thead>
               <tr className="bg-blue-100">
-                <th className="p-3 border">Prime ID</th>
-                <th className="p-3 border">Custom ID</th>
+                <th className="p-3 border">ID</th>
                 <th className="p-3 border">Roll</th>
                 <th className="p-3 border">Name</th>
                 <th className="p-3 border">Class</th>
@@ -324,7 +323,6 @@ const StudentInfo = () => {
                 <tr key={student.studentId} className="border hover:bg-gray-50">
                   <td className="p-3 border truncate">{student._id}</td>
                   <td className="p-3 border">{student.studentId}</td>
-                  <td className="p-3 border">{student.roll || "NA"}</td>
                   <td className="p-3 border">{student.name}</td>
                   <td className="p-3 border">{student.class}</td>
                   <td className="p-3 border">{student.shift}</td>

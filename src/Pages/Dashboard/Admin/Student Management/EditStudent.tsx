@@ -26,6 +26,7 @@ const updateStudent = async (
   data: {
     name: string;
     studentId: string;
+    roll: string;
     profileImg: string;
     email: string;
     password: string;
@@ -65,13 +66,13 @@ const EditStudent = () => {
     enabled: !!studentId,
   });
 
-
   // ✅ Mutation for updating student
   const mutation = useMutation({
     mutationFn: (data: {
       name: string;
       studentId: string;
       profileImg: string;
+      roll: string;
       email: string;
       password: string;
       phone: string;
@@ -99,6 +100,7 @@ const EditStudent = () => {
   const onSubmit = (data: {
     name: string;
     studentId: string;
+    roll: string;
     profileImg: string;
     email: string;
     password: string;
@@ -118,7 +120,6 @@ const EditStudent = () => {
       profileImg: profileImg || student?.data?.profileImg,
     };
     mutation.mutate(finalData);
-    // console.log(finalData);
   };
 
   if (isLoadingStudent) return <Loader />;
@@ -130,155 +131,172 @@ const EditStudent = () => {
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500">
         Edit Student
       </h1>
-      <AppForm
-        onSubmit={onSubmit}
-        defaultValues={{
-          name: student?.data?.name || "",
-          studentId: student?.data?.studentId || "",
-          email: student?.data?.email || "",
-          password: student?.data?.password || "",
-          phone: student?.data?.phone || "",
-          guardianName: student?.data?.guardianName || "",
-          address: student?.data?.address || "",
-          bloodGroup: student?.data?.bloodGroup || "",
-          year: student?.data?.year || "",
-          version: student?.data?.version || "",
-          shift: student?.data?.shift || "",
-          class: student?.data?.class || "",
-          section: student?.data?.section || "",
-          group: student?.data?.group || "",
-        }}
-        buttonText="Update Student"
-      >
-        {/* Student Name */}
-        <AppInput
-          name="name"
-          label="Student Name"
-          placeholder="Enter student name"
-        />
+      {student && (
+        <AppForm
+          onSubmit={onSubmit}
+          defaultValues={{
+            name: student?.data?.name || "",
+            studentId: student?.data?.studentId || "",
+            roll: student?.data?.roll || "",
+            email: student?.data?.email || "",
+            password: student?.data?.password || "",
+            phone: student?.data?.phone || "",
+            guardianName: student?.data?.guardianName || "",
+            address: student?.data?.address || "",
+            bloodGroup: student?.data?.bloodGroup || "",
+            year: student?.data?.year || "",
+            version: student?.data?.version || "",
+            shift: student?.data?.shift || "",
+            class: student?.data?.class || "",
+            section: student?.data?.section || "",
+            group: student?.data?.group || "",
+          }}
+          buttonText="Update Student"
+        >
+          {/* Student Name */}
+          <AppInput
+            name="name"
+            label="Student Name"
+            placeholder="Enter student name"
+          />
 
-        {/* Student ID */}
-        <AppInput
-          name="studentId"
-          label="Student ID"
-          placeholder="Enter student ID"
-        />
+          {/* Student ID */}
+          <AppInput
+            name="studentId"
+            label="Student ID"
+            placeholder="Enter student ID"
+          />
+          {/* Roll */}
+          <AppInput
+            name="roll"
+            label="Class Roll"
+            placeholder="Enter student class roll"
+          />
 
-        {/* Image Upload Section */}
-        <div className="text-sm truncate my-4">
-          <label className="block font-medium text-black ">
-            Upload Profile Image
-          </label>
-          <ImageUpload setUploadedImageUrl={setProfileImg} />
-        </div>
+          {/* Image Upload Section */}
+          <div className="text-sm truncate my-4">
+            <label className="block font-medium text-black ">
+              Upload Profile Image
+            </label>
+            <ImageUpload setUploadedImageUrl={setProfileImg} />
+          </div>
 
-        {/* Email */}
-        <AppInput name="email" label="Email" placeholder="Enter email" />
+          {/* Email */}
+          <AppInput name="email" label="Email" placeholder="Enter email" />
 
-        {/* Password */}
-        <AppInputPassword
-          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
-          name="password"
-          label="Password"
-          labelStyles="text-black"
-          placeholder="Enter new password"
-        />
+          {/* Password */}
+          <AppInputPassword
+            className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
+            name="password"
+            label="Password"
+            labelStyles="text-black"
+            placeholder="Enter new password"
+          />
 
-        {/* Phone */}
-        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
+          {/* Phone */}
+          <AppInput
+            name="phone"
+            label="Phone"
+            placeholder="Enter phone number"
+          />
 
-        {/* Guardian Name */}
-        <AppInput
-          name="guardianName"
-          label="Guardian Name"
-          placeholder="Enter guardian's name"
-        />
+          {/* Guardian Name */}
+          <AppInput
+            name="guardianName"
+            label="Guardian Name"
+            placeholder="Enter guardian's name"
+          />
 
-        {/* Address */}
-        <AppInput name="address" label="Address" placeholder="Enter address" />
+          {/* Address */}
+          <AppInput
+            name="address"
+            label="Address"
+            placeholder="Enter address"
+          />
 
-        {/* Blood Group */}
-        <AppSelect
-          name="bloodGroup"
-          label="Blood Group"
-          placeholder="Select a blood group"
-          options={[
-            { value: "A+", label: "A+" },
-            { value: "A-", label: "A-" },
-            { value: "B+", label: "B+" },
-            { value: "B-", label: "B-" },
-            { value: "AB+", label: "AB+" },
-            { value: "AB-", label: "AB-" },
-            { value: "O+", label: "O+" },
-            { value: "O-", label: "O-" },
-          ]}
-        />
+          {/* Blood Group */}
+          <AppSelect
+            name="bloodGroup"
+            label="Blood Group"
+            placeholder="Select a blood group"
+            options={[
+              { value: "A+", label: "A+" },
+              { value: "A-", label: "A-" },
+              { value: "B+", label: "B+" },
+              { value: "B-", label: "B-" },
+              { value: "AB+", label: "AB+" },
+              { value: "AB-", label: "AB-" },
+              { value: "O+", label: "O+" },
+              { value: "O-", label: "O-" },
+            ]}
+          />
 
-        {/* Year Picker */}
-        <AppYearPicker name="year" label="Year" />
+          {/* Year Picker */}
+          <AppYearPicker name="year" label="Year" />
 
-        {/* Version */}
-        <AppSelect
-          name="version"
-          label="Version"
-          placeholder="Select a version"
-          options={[
-            { value: "Bangla", label: "Bangla" },
-            { value: "English", label: "English" },
-          ]}
-        />
+          {/* Version */}
+          <AppSelect
+            name="version"
+            label="Version"
+            placeholder="Select a version"
+            options={[
+              { value: "Bangla", label: "Bangla" },
+              { value: "English", label: "English" },
+            ]}
+          />
 
-        {/* Shift */}
-        <AppSelect
-          name="shift"
-          label="Shift"
-          placeholder="Select a shift"
-          options={[
-            { value: "Morning", label: "Morning" },
-            { value: "Day", label: "Day" },
-            { value: "Evening", label: "Evening" },
-          ]}
-        />
+          {/* Shift */}
+          <AppSelect
+            name="shift"
+            label="Shift"
+            placeholder="Select a shift"
+            options={[
+              { value: "Morning", label: "Morning" },
+              { value: "Day", label: "Day" },
+              { value: "Evening", label: "Evening" },
+            ]}
+          />
 
-        {/* Class */}
-        <AppSelect
-          name="class"
-          label="Class"
-          placeholder="Select a class"
-          options={[
-            { value: "7", label: "Seven" },
-            { value: "8", label: "Eight" },
-            { value: "9", label: "Nine" },
-            { value: "10", label: "Ten" },
-          ]}
-        />
+          {/* Class */}
+          <AppSelect
+            name="class"
+            label="Class"
+            placeholder="Select a class"
+            options={[
+              { value: "7", label: "Seven" },
+              { value: "8", label: "Eight" },
+              { value: "9", label: "Nine" },
+              { value: "10", label: "Ten" },
+            ]}
+          />
 
-        {/* Section */}
-        <AppSelect
-          name="section"
-          label="Section"
-          placeholder="Select a section"
-          options={[
-            { value: "A", label: "A" },
-            { value: "B", label: "B" },
-            { value: "C", label: "C" },
-            { value: "D", label: "D" },
-          ]}
-        />
+          {/* Section */}
+          <AppSelect
+            name="section"
+            label="Section"
+            placeholder="Select a section"
+            options={[
+              { value: "A", label: "A" },
+              { value: "B", label: "B" },
+              { value: "C", label: "C" },
+              { value: "D", label: "D" },
+            ]}
+          />
 
-        {/* Group (Optional) */}
-        <AppSelect
-          name="group"
-          label="Group (If Applicable)"
-          placeholder="Select a group"
-          options={[
-            { value: "Science", label: "Science" },
-            { value: "Arts", label: "Arts" },
-            { value: "Commerce", label: "Commerce" },
-            { value: "NA", label: "NA" },
-          ]}
-        />
-      </AppForm>
+          {/* Group (Optional) */}
+          <AppSelect
+            name="group"
+            label="Group (If Applicable)"
+            placeholder="Select a group"
+            options={[
+              { value: "Science", label: "Science" },
+              { value: "Arts", label: "Arts" },
+              { value: "Commerce", label: "Commerce" },
+              { value: "NA", label: "NA" },
+            ]}
+          />
+        </AppForm>
+      )}
     </div>
   );
 };
