@@ -33,6 +33,8 @@ import EditStudent from "@/Pages/Dashboard/Admin/Student Management/EditStudent"
 import FullStudentInfo from "@/Pages/Dashboard/Admin/Student Management/FullStudentInfo";
 import AddExam from "@/Pages/Dashboard/Admin/Exam Management/AddExam";
 import TakeAttendance from "@/Pages/Dashboard/AttendanceManagement/TakeAttendance";
+import StudentViewResults from "@/Pages/Dashboard/Admin/ViewResult/StudentViewResult";
+import AddSubject from "@/Pages/Dashboard/Admin/Exam Management/AddSubject";
 
 export const router = createBrowserRouter([
   {
@@ -95,6 +97,11 @@ export const router = createBrowserRouter([
         path: "/dashboard/admin/edit-event/:eventId",
         element: <EditEvent />,
       },
+      // Result
+      {
+        path: "/dashboard/student/exam-result",
+        element: <StudentViewResults />,
+      },
       // Administration
       {
         path: "/dashboard/admin/administration",
@@ -139,6 +146,10 @@ export const router = createBrowserRouter([
         element: <FullStudentInfo />,
       },
       // Exam Management (TODO:Incomplete)
+      {
+        path: "/dashboard/admin/exam-management/add-subject",
+        element: <AddSubject />,
+      },
       {
         path: "/dashboard/admin/exam-management/add-exam",
         element: <AddExam />,

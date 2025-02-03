@@ -66,6 +66,7 @@ const AddTeacher = () => {
     const finalData = {
       ...data,
       profileImg,
+      salary: Number(data.salary),
     };
 
     mutation.mutate(finalData);
@@ -133,7 +134,7 @@ const AddTeacher = () => {
         <AppInput name="salary" label="Salary" placeholder="Enter salary" />
         {/* Address */}
         <AppInput name="address" label="Address" placeholder="Enter Address" />
-        {/* Bloodgroup */}
+        {/* Blood Group */}
         <AppSelect
           name="bloodGroup"
           label="Blood Group"

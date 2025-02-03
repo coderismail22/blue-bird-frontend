@@ -197,6 +197,16 @@ export const sidebarData = {
       children: [
         {
           icon: IoMdAddCircleOutline,
+          label: "Add Subject",
+          path: "/dashboard/admin/exam-management/add-subject",
+        },
+        {
+          icon: FaRegListAlt,
+          label: "View Subjects",
+          path: "/dashboard/admin/exam-management/view-subjects",
+        },
+        {
+          icon: IoMdAddCircleOutline,
           label: "Add Exam",
           path: "/dashboard/admin/exam-management/add-exam",
         },
@@ -221,6 +231,11 @@ export const sidebarData = {
     {
       label: "Administration ",
       path: "/dashboard/admin/administration",
+      icon: FaPeopleRoof,
+    },
+    {
+      label: "Exam Result ",
+      path: "/dashboard/student/exam-result",
       icon: FaPeopleRoof,
     },
   ],

@@ -7,10 +7,8 @@ import axiosInstance from "@/api/axiosInstance";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { useState } from "react";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
-import DynamicSelectField from "@/components/CustomForm/DynamicSelect";
 
 // ✅ Add exam function
 const addExam = async (examData: {
@@ -21,21 +19,12 @@ const addExam = async (examData: {
   class: string;
   section: string;
   group?: string;
-  subjects: string[];
 }) => {
-  const response = await axiosInstance.post("/exams/add-exam", examData);
+  const response = await axiosInstance.post("/exams/create-exam", examData);
   return response.data;
 };
 
 const AddExam = () => {
-  const [subjectOptions] = useState([
-    { value: "Mathematics", label: "Mathematics" },
-    { value: "Physics", label: "Physics" },
-    { value: "Chemistry", label: "Chemistry" },
-    { value: "Biology", label: "Biology" },
-    { value: "History", label: "History" },
-  ]);
-
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -44,7 +33,7 @@ const AddExam = () => {
     onSuccess: () => {
       Swal.fire("Success!", "Exam added successfully!", "success");
       queryClient.invalidateQueries({ queryKey: ["exams"] });
-      navigate("/dashboard/admin/exam-management/all-exams");
+      navigate("/dashboard/admin/exam-management/add-exam");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
       console.log(err);
@@ -59,11 +48,10 @@ const AddExam = () => {
     shift: string;
     class: string;
     section: string;
-    group?: string;
-    subjects: string[];
+    group: string;
   }) => {
-    // mutation.mutate(data);
-    console.log(data);
+    mutation.mutate(data);
+    // console.log(data);
   };
 
   return (
@@ -73,6 +61,7 @@ const AddExam = () => {
       </h1>
       <AppForm
         onSubmit={onSubmit}
+        // TODO: Add form schema
         defaultValues={{
           name: "",
           year: "",
@@ -81,7 +70,6 @@ const AddExam = () => {
           class: "",
           section: "",
           group: "",
-          subjects: [],
         }}
         buttonText="Add Exam"
       >
@@ -151,18 +139,6 @@ const AddExam = () => {
             { value: "Arts", label: "Arts" },
             { value: "NA", label: "NA" },
           ]}
-        />
-
-        {/* Dynamic Subject Selection */}
-        <DynamicSelectField
-          label="Subjects"
-          placeholder="Select subjects"
-          options={subjectOptions}
-          onChange={(selectedValues) => {
-            // Update form state manually if needed
-            console.log("Selected subjects:", selectedValues);
-          }}
-          defaultValue={[]}
         />
       </AppForm>
     </div>
