@@ -24,6 +24,7 @@ import { BiCategory } from "react-icons/bi";
 import { FaMoneyCheckDollar, FaPeopleRoof } from "react-icons/fa6";
 import { PiStudentFill } from "react-icons/pi";
 import { HiLightBulb } from "react-icons/hi";
+import { GiArchiveRegister } from "react-icons/gi";
 
 export const sidebarData = {
   superAdmin: [
@@ -211,6 +212,11 @@ export const sidebarData = {
           path: "/dashboard/admin/exam-management/add-exam",
         },
         {
+          icon: GiArchiveRegister,
+          label: "Exam Registration",
+          path: "/dashboard/admin/exam-management/exam-registration",
+        },
+        {
           icon: FaRegListAlt,
           label: "Exam Archive",
           path: "/dashboard/admin/exam-management/exam-archive",
@@ -228,6 +234,12 @@ export const sidebarData = {
         },
       ],
     },
+    {
+      icon: MdOutlineNoteAlt,
+      label: "Mark Entry",
+      path: "/dashboard/teacher/mark-entry",
+    },
+
     {
       label: "Administration ",
       path: "/dashboard/admin/administration",

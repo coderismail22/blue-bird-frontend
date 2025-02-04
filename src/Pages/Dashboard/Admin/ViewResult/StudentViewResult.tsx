@@ -4,12 +4,12 @@ import axiosInstance from "@/api/axiosInstance";
 import { useEffect, useState } from "react";
 
 function StudentViewResults() {
-  const studentId = "679f3941b66c0ffe736f88fa"; // from context or local storage
+  const studentId = "67a0ad7b0aef8cec2bf215b1"; // from context or local storage
   const name = "Ismail"; // from context or local storage
-  const [exams, setExams] = useState<any[]>([]);
-  const [selectedExamId, setSelectedExamId] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const [examInfo, setExamInfo] = useState<any>(null);
+  const [exams, setExams] = useState<any[]>([]); //when student comes to this page auto load the exam matching exam list
+  const [selectedExamId, setSelectedExamId] = useState(""); // when student picks an exam
+  const [results, setResults] = useState<any[]>([]); // fetches and sets the result for the selected exam
+  const [examInfo, setExamInfo] = useState<any>(null); // fetches and sets the subject details for the selected exam
 
   useEffect(() => {
     // 1) Based on the student's profile (year, version, class, shift, etc.),
@@ -17,10 +17,10 @@ function StudentViewResults() {
     // For example, if student is year=2025, version=Bangla, class=10, shift=Morning, section=A, group=Science
     axiosInstance
       .get(
-        "/exams?year=2025&version=Bangla&class=10&shift=Morning&section=A&group=Science"
+        "/exams?year=2025&version=Bangla&class=9&shift=Morning&section=A&group=Science"
       )
       .then((res) => {
-        console.log("initial response", res.data.data);
+        // console.log("initial response", res.data.data);
         setExams(res.data.data || []);
       })
       .catch((err) => console.error(err));
@@ -33,31 +33,36 @@ function StudentViewResults() {
     // 2) Optionally fetch the exam doc for subject details
     const examRes = await axiosInstance.get(`/exams/${examId}`);
     setExamInfo(examRes.data.data);
-    console.log("🚀 examRes", examRes.data.data);
+    // console.log("🚀 examRes", examRes.data.data);
 
     // 3) Then fetch the results for that exam + this student
     const resultRes = await axiosInstance.get(
       `/exam-results?examId=${examId}&studentId=${studentId}`
     );
-    console.log("🚀 resultRes:", resultRes.data.data);
+    // console.log("🚀 resultRes:", resultRes.data.data);
     setResults(resultRes.data.data);
   }
 
   // Merge logic: if examInfo has subjects, match them with results
+  {
+    console.log("examInfo", examInfo);
+  }
+  {
+    console.log("results", results);
+  }
   const mergedSubjects =
     examInfo?.subjects?.map((sub: any) => {
-      const found = results.find((r: any) => r.examSubjectId === sub._id);
-      // console.log('found',found)
+      const found = results.find((r: any) => r.examSubjectId._id === sub._id);
+      console.log("spread subject", { ...sub });
+      console.log("found marks", found?.marks);
       return {
         ...sub,
         marks: found?.marks || null,
       };
     }) || [];
-  console.log("info", examInfo);
 
   return (
     <div>
-
       <p className="text-center text-2xl mb-5">Welcome, {name}</p>
 
       {/* Dropdown of exam names */}
@@ -91,6 +96,7 @@ function StudentViewResults() {
               </tr>
             </thead>
             <tbody>
+              {console.log("merged subjects", mergedSubjects)}
               {mergedSubjects.map((s: any) => (
                 <tr key={s._id}>
                   <td>{s.name}</td>
