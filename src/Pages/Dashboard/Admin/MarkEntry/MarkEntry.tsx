@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { AxiosError } from "axios";
 import "../../../../styles/swal.css";
+import { Button } from "@/components/ui/button";
 // Save student mark
 const saveStudentMarks = async (payload: any) => {
   const response = await axiosInstance.post(
@@ -256,7 +257,6 @@ const MarkEntry = () => {
                 <td className="p-2 border">{stu.name}</td>
                 <td className="p-2 border">
                   <input
-                    type="number"
                     value={marks.mcqMark || 0}
                     onChange={(e) =>
                       handleMarkChange(
@@ -269,7 +269,6 @@ const MarkEntry = () => {
                 </td>
                 <td className="p-2 border">
                   <input
-                    type="number"
                     value={marks.cqMark || 0}
                     onChange={(e) =>
                       handleMarkChange(
@@ -282,7 +281,6 @@ const MarkEntry = () => {
                 </td>
                 <td className="p-2 border">
                   <input
-                    type="number"
                     value={marks.practicalMark || 0}
                     onChange={(e) =>
                       handleMarkChange(
@@ -295,7 +293,6 @@ const MarkEntry = () => {
                 </td>
                 <td className="p-2 border">
                   <input
-                    type="number"
                     value={marks.plainMark || 0}
                     onChange={(e) =>
                       handleMarkChange(
@@ -306,13 +303,13 @@ const MarkEntry = () => {
                     }
                   />
                 </td>
-                <td>
-                  <button
-                    className="p-1 bg-blue-500 text-white rounded"
+                <td className="p-1">
+                  <Button
+                    className=" bg-blue-500 hover:bg-blue-400 text-white rounded"
                     onClick={() => handleSubmitStudentMarks(stu._id)}
                   >
                     Submit
-                  </button>
+                  </Button>
                 </td>
               </tr>
             );
