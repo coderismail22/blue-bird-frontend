@@ -13,18 +13,17 @@ const saveStudentMarks = async (payload: any) => {
     "/exam-results/create-or-update",
     payload
   );
-
   return response.data;
 };
 
-// Fetch exam
-const fetchExams = async () => {
-  const response = await axiosInstance.get("/exams?year=2025&version=Bangla");
-  console.log("exams", response.data.data);
+// Fetch exams dynamically based on filters
+const fetchExams = async (queryParams: string) => {
+  console.log("query params", queryParams);
+  const response = await axiosInstance.get(`/exams?${queryParams}`);
   return response.data.data;
 };
 
-// Fetch students
+// Fetch students and results
 const fetchStudents = async ({ queryKey }) => {
   const [, examId] = queryKey;
   const response = await axiosInstance.get(
@@ -33,7 +32,6 @@ const fetchStudents = async ({ queryKey }) => {
   return response.data.data;
 };
 
-// Fetch results
 const fetchResults = async ({ queryKey }) => {
   const [, examId, examSubjectId] = queryKey;
   const response = await axiosInstance.get(
@@ -42,47 +40,123 @@ const fetchResults = async ({ queryKey }) => {
   return response.data.data;
 };
 
-// Mark Entry Component
-const MarkEntry = () => {
-  const [selectedExamId, setSelectedExamId] = useState(""); //
+const TeacherOnlyMarkEntry = () => {
+  const queryClient = useQueryClient();
+
+  // States for dropdowns
+  const [years, setYears] = useState<string[]>([]);
+  const [versions, setVersions] = useState<string[]>([]);
+  const [classes, setClasses] = useState<string[]>([]);
+  const [shifts] = useState<string[]>(["Morning", "Day", "Evening"]);
+  const [sections, setSections] = useState<string[]>([]);
+  const [groups, setGroups] = useState<string[]>([]);
+
+  // Selection states
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedVersion, setSelectedVersion] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedShift, setSelectedShift] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
+
+  // Existing states
+  const [selectedExamId, setSelectedExamId] = useState("");
   const [selectedSubjectId, setSelectedSubjectId] = useState("");
-  const [selectedTeacherId, setSelectedTeacherId] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [marksData, setMarksData] = useState({});
   const [students, setStudents] = useState([]);
-  const queryClient = useQueryClient();
 
-  // handle subject change along with teacher id
-  const handleSubjectChange = (e) => {
-    const subjectId = e.target.value;
-    const teacherId =
-      e.target.options[e.target.selectedIndex].dataset.teacherId;
+  // Fetch dropdown data dynamically
+  useEffect(() => {
+    axiosInstance
+      .get("/students/years")
+      .then((response) => setYears(response.data.data || []))
+      .catch((error) => console.error("Failed to fetch years:", error));
+  }, []);
 
-    setSelectedSubjectId(subjectId);
-    setSelectedTeacherId(teacherId);
+  const handleYearChange = async (year: string) => {
+    setSelectedYear(year);
+    resetSelections();
+    const response = await axiosInstance.get(`/students/versions/${year}`);
+    setVersions(response.data.data || []);
   };
 
-  // Fetch Exams
+  const handleVersionChange = async (version: string) => {
+    setSelectedVersion(version);
+    resetSelections(true);
+    const response = await axiosInstance.get(
+      `/students/classes/${selectedYear}/${version}`
+    );
+    setClasses(response.data.data || []);
+  };
+
+  const handleClassChange = async (className: string) => {
+    setSelectedClass(className);
+    resetSelections(true, true);
+    const response = await axiosInstance.get(
+      `/students/sections/${selectedYear}/${selectedVersion}/${className}`
+    );
+    setSections(response.data.data || []);
+
+    if (parseInt(className) >= 9) {
+      const groupResponse = await axiosInstance.get(
+        `/students/groups/${selectedYear}/${selectedVersion}/${className}`
+      );
+      setGroups(groupResponse.data.data || []);
+    } else {
+      setGroups([]);
+      setSelectedGroup("");
+    }
+  };
+
+  const handleShiftChange = (shift: string) => setSelectedShift(shift);
+  const handleSectionChange = (section: string) => setSelectedSection(section);
+
+  const resetSelections = (keepVersion = false, keepClass = false) => {
+    if (!keepVersion) setSelectedVersion("");
+    if (!keepClass) setSelectedClass("");
+    setSelectedShift("");
+    setSelectedSection("");
+    setSelectedGroup("");
+    setStudents([]);
+  };
+
+  // Fetch exams based on filters
+  const filterParams = new URLSearchParams({
+    year: selectedYear,
+    version: selectedVersion,
+    className: selectedClass,
+    shift: selectedShift,
+    section: selectedSection,
+    group: selectedGroup,
+  }).toString();
+
   const { data: exams } = useQuery({
-    queryKey: ["exams"],
-    queryFn: fetchExams,
+    queryKey: ["teacherExams", filterParams],
+    queryFn: () => fetchExams(filterParams),
+    enabled: !!(
+      selectedYear &&
+      selectedVersion &&
+      selectedClass &&
+      selectedShift &&
+      selectedSection
+    ),
   });
 
-  // Fetch Registered Students
+  // Fetch students and results
   const { data: registeredStudents } = useQuery({
     queryKey: ["students", selectedExamId],
     queryFn: fetchStudents,
     enabled: !!selectedExamId,
   });
 
-  // Fetch Exam Results
   const { data: results } = useQuery({
     queryKey: ["results", selectedExamId, selectedSubjectId],
     queryFn: fetchResults,
     enabled: !!selectedExamId && !!selectedSubjectId,
   });
 
-  // Combine Students and Marks Data For The Final Mark Table
+  // Combine students and results data
   useEffect(() => {
     if (registeredStudents && results) {
       const studentMarksMap = results.reduce((acc, result) => {
@@ -96,16 +170,19 @@ const MarkEntry = () => {
       }));
 
       setStudents(combinedStudents);
-      // Initialize marksData state
-      const initialMarksData = combinedStudents.reduce((acc, student) => {
-        acc[student.studentId._id] = student.marks;
-        return acc;
-      }, {});
-      setMarksData(initialMarksData);
+      setMarksData(
+        combinedStudents.reduce(
+          (acc, student) => ({
+            ...acc,
+            [student.studentId._id]: student.marks,
+          }),
+          {}
+        )
+      );
     }
   }, [registeredStudents, results]);
 
-  // Mutation for saving student marks (single student)
+  // Mutation to save marks
   const mutation = useMutation({
     mutationFn: saveStudentMarks,
     onSuccess: () => {
@@ -113,60 +190,29 @@ const MarkEntry = () => {
         icon: "success",
         title: "Saved",
         text: "Student marks saved successfully.",
-        customClass: {
-          title: "custom-title",
-          popup: "custom-popup",
-          icon: "custom-icon",
-          confirmButton: "custom-confirm-btn",
-        },
       });
       queryClient.invalidateQueries({ queryKey: ["saveMark"] });
     },
-    onError: (err: AxiosError) => {
-      handleAxiosError(err, "Failed to save student marks");
-    },
+    onError: (err: AxiosError) =>
+      handleAxiosError(err, "Failed to save student marks"),
   });
 
-  // Function to handle individual student submission
-  function handleSubmitStudentMarks(studentId) {
-    if (!selectedSubjectId) {
-      Swal.fire("Error", "Please select a subject", "error");
-      return;
-    }
-
-    const studentMarks = marksData[studentId] || {};
-    const payload = {
-      examId: selectedExamId,
-      examSubjectId: selectedSubjectId,
-      studentId: studentId,
-      teacherId: selectedTeacherId,
-      marks: {
-        mcqMark: studentMarks.mcqMark || 0,
-        cqMark: studentMarks.cqMark || 0,
-        practicalMark: studentMarks.practicalMark || 0,
-        plainMark: studentMarks.plainMark || 0,
-      },
-    };
-
-    // console.log("save mark studentId", studentId);
-    // console.log("save mark payload", payload);
-    mutation.mutate(payload);
-  }
-
-  // Handle Exam Change
-  function handleExamChange(event) {
+  const handleExamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const examId = event.target.value;
     setSelectedExamId(examId);
+    const selectedExam = exams?.find((exam) => exam._id === examId);
+    if (selectedExam) setSubjects(selectedExam.subjects);
+  };
 
-    const selectedExam = exams.find((exam) => exam._id === examId);
-    if (selectedExam) {
-      // TODO: Add and show subjects
-      setSubjects(selectedExam.subjects);
-    }
-  }
+  const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSubjectId(e.target.value);
+  };
 
-  // Handle input change for marks
-  const handleMarkChange = (studentId, field, value) => {
+  const handleMarkChange = (
+    studentId: string,
+    field: string,
+    value: number
+  ) => {
     setMarksData((prev) => ({
       ...prev,
       [studentId]: {
@@ -176,52 +222,222 @@ const MarkEntry = () => {
     }));
   };
 
+  const handleSubmitStudentMarks = (studentId: string) => {
+    if (!selectedSubjectId) {
+      Swal.fire("Error", "Please select a subject", "error");
+      return;
+    }
+
+    const studentMarks = marksData[studentId] || {};
+    mutation.mutate({
+      examId: selectedExamId,
+      examSubjectId: selectedSubjectId,
+      studentId,
+      teacherId,
+      marks: {
+        mcqMark: studentMarks.mcqMark || 0,
+        cqMark: studentMarks.cqMark || 0,
+        practicalMark: studentMarks.practicalMark || 0,
+        plainMark: studentMarks.plainMark || 0,
+      },
+    });
+  };
+
   return (
-    <div className="mx-auto p-6">
+    <div>
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500">
-        Mark Entry
+        Mark Entry (Super Admin Only)
       </h1>
 
-      {/* Exam & Subject Selection */}
-      <div className="max-w-2xl mx-auto">
+      {/* Dropdowns */}
+      <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Year Selection */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Year:
+          </label>
+          <select
+            onChange={(e) => handleYearChange(e.target.value)}
+            value={selectedYear}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
+          >
+            <option value="">Select Year</option>
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Version Selection */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Version:
+          </label>
+          <select
+            onChange={(e) => handleVersionChange(e.target.value)}
+            value={selectedVersion}
+            disabled={!selectedYear}
+            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
+              !selectedYear
+                ? "bg-gray-200 cursor-not-allowed"
+                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+            }`}
+          >
+            <option value="">Select Version</option>
+            {versions.map((version) => (
+              <option key={version} value={version}>
+                {version}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Class Selection */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Class:
+          </label>
+          <select
+            onChange={(e) => handleClassChange(e.target.value)}
+            value={selectedClass}
+            disabled={!selectedVersion}
+            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
+              !selectedVersion
+                ? "bg-gray-200 cursor-not-allowed"
+                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+            }`}
+          >
+            <option value="">Select Class</option>
+            {classes.map((className) => (
+              <option key={className} value={className}>
+                {className}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Shift Selection */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Shift:
+          </label>
+          <select
+            onChange={(e) => handleShiftChange(e.target.value)}
+            value={selectedShift}
+            disabled={!selectedClass}
+            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
+              !selectedClass
+                ? "bg-gray-200 cursor-not-allowed"
+                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+            }`}
+          >
+            <option value="">Select Shift</option>
+            {shifts.map((shift) => (
+              <option key={shift} value={shift}>
+                {shift}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Section Selection */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Section:
+          </label>
+          <select
+            onChange={(e) => handleSectionChange(e.target.value)}
+            value={selectedSection}
+            disabled={!selectedShift}
+            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
+              !selectedShift
+                ? "bg-gray-200 cursor-not-allowed"
+                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+            }`}
+          >
+            <option value="">Select Section</option>
+            {sections.map((section) => (
+              <option key={section} value={section}>
+                {section}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Group Selection (Only for Class 9-12) */}
+        {parseInt(selectedClass) >= 9 && (
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-1">
+              Group:
+            </label>
+            <select
+              onChange={(e) => setSelectedGroup(e.target.value)}
+              value={selectedGroup}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
+            >
+              <option value="">Select Group</option>
+              {groups.map((group) => (
+                <option key={group} value={group}>
+                  {group}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {/* Exam Selection */}
-        <label className="block font-medium text-gray-700 mb-2">
-          Select Exam
-        </label>
-        <select
-          className="w-full p-2 border border-gray-300 rounded mb-4"
-          value={selectedExamId}
-          onChange={handleExamChange}
-        >
-          <option value="">Choose an exam</option>
-          {exams?.map((exam) => (
-            <option key={exam._id} value={exam._id}>
-              {exam.name} ({exam.year})
-            </option>
-          ))}
-        </select>
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Select Exam:
+          </label>
+          <select
+            value={selectedExamId}
+            onChange={handleExamChange}
+            disabled={!selectedGroup}
+            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
+              !selectedGroup
+                ? "bg-gray-200 cursor-not-allowed"
+                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+            }`}
+          >
+            <option value="">Choose an exam</option>
+            {exams?.map((exam) => (
+              <option key={exam._id} value={exam._id}>
+                {exam.name} ({exam.year})
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Subject Selection */}
-        <label className="block font-medium text-gray-700 mb-2">
-          Select Subject
-        </label>
-        <select
-          className="w-full p-2 border border-gray-300 rounded mb-4"
-          value={selectedSubjectId}
-          onChange={handleSubjectChange}
-          disabled={!subjects.length}
-        >
-          <option value="">Choose a subject</option>
-          {subjects.map((subject) => (
-            <option
-              key={subject._id}
-              value={subject._id}
-              data-teacher-id={subject.subjectTeacher._id}
-            >
-              {subject.name} | {subject.subjectTeacher.name}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Select Subject:
+          </label>
+          <select
+            value={selectedSubjectId}
+            onChange={handleSubjectChange}
+            disabled={!selectedExamId}
+            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
+              !selectedExamId
+                ? "bg-gray-200 cursor-not-allowed"
+                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+            }`}
+          >
+            <option value="">Choose a subject</option>
+            {subjects.map((subject) => (
+              <option
+                key={subject._id}
+                value={subject._id}
+                data-teacher-id={subject.subjectTeacher._id}
+              >
+                {subject.name} | {subject.subjectTeacher.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Mark Table For All Students */}
@@ -311,4 +527,4 @@ const MarkEntry = () => {
   );
 };
 
-export default MarkEntry;
+export default TeacherOnlyMarkEntry;

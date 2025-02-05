@@ -18,7 +18,6 @@ const saveStudentMarks = async (payload: any) => {
 
 // Fetch exams dynamically based on filters
 const fetchExams = async (queryParams: string) => {
-  console.log("query params", queryParams);
   const response = await axiosInstance.get(
     `/exams/teacher-only-exams?${queryParams}`
   );
@@ -43,7 +42,7 @@ const fetchResults = async ({ queryKey }) => {
 };
 
 const TeacherOnlyMarkEntry = () => {
-  const teacherId = "67a0ac5f0aef8cec2bf215a7"; // Hardcoded teacherId for now
+  const teacherId = "67a0ac5f0aef8cec2bf215a7"; // TODO: get teacherId after login
   const queryClient = useQueryClient();
 
   // States for dropdowns
@@ -203,9 +202,22 @@ const TeacherOnlyMarkEntry = () => {
 
   const handleExamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const examId = event.target.value;
+
+    // Set selected exam ID
     setSelectedExamId(examId);
+
+    // Find the selected exam from the exams array
     const selectedExam = exams?.find((exam) => exam._id === examId);
-    if (selectedExam) setSubjects(selectedExam.subjects);
+
+    if (selectedExam) {
+      // Filter subjects where the subjectTeacher's _id matches the tid
+      const filteredSubjects = selectedExam.subjects.filter(
+        (subject) => subject?.subjectTeacher?._id === teacherId
+      );
+
+      // Set filtered subjects to the state
+      setSubjects(filteredSubjects);
+    }
   };
 
   const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -248,13 +260,13 @@ const TeacherOnlyMarkEntry = () => {
   };
 
   return (
-    <div className="mx-auto p-6">
+    <div>
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500">
-        Teacher Only Mark Entry
+        Mark Entry (Assigned Teacher Only)
       </h1>
 
       {/* Dropdowns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Year Selection */}
         <div>
           <label className="block text-sm font-semibold text-gray-800 mb-1">
@@ -444,18 +456,20 @@ const TeacherOnlyMarkEntry = () => {
         </div>
       </div>
 
-      {/* Mark table */}
-      <table>
-        <thead>
+      {/* Mark Table For All Students */}
+      <table className="w-full mt-6 border border-gray-300">
+        {/* Header */}
+        <thead className="bg-gray-100">
           <tr>
-            <th>Student Name</th>
-            <th>MCQ</th>
-            <th>CQ</th>
-            <th>Practical</th>
-            <th>Plain</th>
-            <th>Submit</th>
+            <th className="p-2 border">Student Name</th>
+            <th className="p-2 border">MCQ</th>
+            <th className="p-2 border">CQ</th>
+            <th className="p-2 border">Practical</th>
+            <th className="p-2 border">Plain</th>
+            <th className="p-2 border">Submit</th>
           </tr>
         </thead>
+        {/* Body */}
         <tbody>
           {students.map((student) => {
             const stu = student.studentId;
@@ -463,8 +477,8 @@ const TeacherOnlyMarkEntry = () => {
 
             return (
               <tr key={stu._id}>
-                <td>{stu.name}</td>
-                <td>
+                <td className="p-2 border">{stu.name}</td>
+                <td className="p-2 border">
                   <input
                     value={marks.mcqMark || 0}
                     onChange={(e) =>
@@ -476,7 +490,7 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     value={marks.cqMark || 0}
                     onChange={(e) =>
@@ -488,7 +502,7 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     value={marks.practicalMark || 0}
                     onChange={(e) =>
@@ -500,7 +514,7 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     value={marks.plainMark || 0}
                     onChange={(e) =>
@@ -512,8 +526,11 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td>
-                  <Button onClick={() => handleSubmitStudentMarks(stu._id)}>
+                <td className="p-1">
+                  <Button
+                    className=" bg-blue-500 hover:bg-blue-400 text-white rounded"
+                    onClick={() => handleSubmitStudentMarks(stu._id)}
+                  >
                     Submit
                   </Button>
                 </td>
