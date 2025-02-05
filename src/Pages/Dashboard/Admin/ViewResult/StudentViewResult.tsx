@@ -65,46 +65,53 @@ function StudentViewResults() {
     <div>
       <p className="text-center text-2xl mb-5">Welcome, {name}</p>
 
-      {/* Dropdown of exam names */}
-      <label>Select Exam: </label>
-      <select
-        value={selectedExamId}
-        onChange={(e) => handleSelectExam(e.target.value)}
-      >
-        <option value="">Choose an exam</option>
-        {exams.map((exam) => (
-          <option key={exam._id} value={exam._id}>
-            {exam.name} ({exam.year}, {exam.class}, {exam.shift})
-          </option>
-        ))}
-      </select>
+      {/* Dropdown of student's available exams */}
+      <div className="max-w-md">
+        <label className="block text-sm font-semibold text-gray-800 mb-1">
+          Select Exam:{" "}
+        </label>
+        <select
+          value={selectedExamId}
+          onChange={(e) => handleSelectExam(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
+        >
+          <option value="">Choose an exam</option>
+          {exams.map((exam) => (
+            <option key={exam._id} value={exam._id}>
+              {exam.name} ({exam.year}, {exam.class}, {exam.shift})
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* If user selected an exam, display the subjects + marks */}
       {selectedExamId && examInfo && (
         <>
           {/* <h3>{examInfo.name}</h3> */}
           {/* <h3>{examInfo._id}</h3> */}
-          <table>
-            <thead>
+          <table className="w-full mt-6 border border-gray-300">
+            <thead className="bg-gray-100">
               <tr>
-                <th>Subject</th>
-                <th>MCQ</th>
-                <th>CQ</th>
-                <th>Practical</th>
-                <th>Plain</th>
-                <th>Total</th>
+                <th className="p-2 border">Subject</th>
+                <th className="p-2 border">MCQ</th>
+                <th className="p-2 border">CQ</th>
+                <th className="p-2 border">Practical</th>
+                <th className="p-2 border">Plain</th>
+                <th className="p-2 border">Total</th>
+                {/* <th className="p-2 border">Grade (Optional)</th> */}
               </tr>
             </thead>
             <tbody>
               {console.log("merged subjects", mergedSubjects)}
               {mergedSubjects.map((s: any) => (
-                <tr key={s._id}>
-                  <td>{s.name}</td>
-                  <td>{s.marks?.mcqMark ?? 0}</td>
-                  <td>{s.marks?.cqMark ?? 0}</td>
-                  <td>{s.marks?.practicalMark ?? 0}</td>
-                  <td>{s.marks?.plainMark ?? 0}</td>
-                  <td>{s.marks?.totalMark ?? 0}</td>
+                <tr key={s._id} className="text-center">
+                  <td className="p-2 border">{s.name}</td>
+                  <td className="p-2 border">{s.marks?.mcqMark ?? 0}</td>
+                  <td className="p-2 border">{s.marks?.cqMark ?? 0}</td>
+                  <td className="p-2 border">{s.marks?.practicalMark ?? 0}</td>
+                  <td className="p-2 border">{s.marks?.plainMark ?? 0}</td>
+                  <td className="p-2 border">{s.marks?.totalMark ?? 0}</td>
+                  {/* <td className="p-2 border">Grade</td> */}
                 </tr>
               ))}
             </tbody>
