@@ -457,88 +457,94 @@ const TeacherOnlyMarkEntry = () => {
       </div>
 
       {/* Mark Table For All Students */}
-      <table className="w-full mt-6 border border-gray-300">
-        {/* Header */}
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="p-2 border">Student Name</th>
-            <th className="p-2 border">MCQ</th>
-            <th className="p-2 border">CQ</th>
-            <th className="p-2 border">Practical</th>
-            <th className="p-2 border">Plain</th>
-            <th className="p-2 border">Submit</th>
-          </tr>
-        </thead>
-        {/* Body */}
-        <tbody>
-          {students.map((student) => {
-            const stu = student.studentId;
-            const marks = marksData[stu._id] || {};
+      {selectedSubjectId && (
+        <table className="w-full mt-6 border border-gray-300">
+          {/* Header */}
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-2 border">Student Name</th>
+              <th className="p-2 border">MCQ</th>
+              <th className="p-2 border">CQ</th>
+              <th className="p-2 border">Practical</th>
+              <th className="p-2 border">Plain</th>
+              <th className="p-2 border">Submit</th>
+            </tr>
+          </thead>
+          {/* Body */}
+          <tbody>
+            {students.map((student) => {
+              const stu = student.studentId;
+              const marks = marksData[stu._id] || {};
 
-            return (
-              <tr key={stu._id}>
-                <td className="p-2 border">{stu.name}</td>
-                <td className="p-2 border">
-                  <input
-                    value={marks.mcqMark || 0}
-                    onChange={(e) =>
-                      handleMarkChange(
-                        stu._id,
-                        "mcqMark",
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                </td>
-                <td className="p-2 border">
-                  <input
-                    value={marks.cqMark || 0}
-                    onChange={(e) =>
-                      handleMarkChange(
-                        stu._id,
-                        "cqMark",
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                </td>
-                <td className="p-2 border">
-                  <input
-                    value={marks.practicalMark || 0}
-                    onChange={(e) =>
-                      handleMarkChange(
-                        stu._id,
-                        "practicalMark",
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                </td>
-                <td className="p-2 border">
-                  <input
-                    value={marks.plainMark || 0}
-                    onChange={(e) =>
-                      handleMarkChange(
-                        stu._id,
-                        "plainMark",
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                </td>
-                <td className="p-1">
-                  <Button
-                    className=" bg-blue-500 hover:bg-blue-400 text-white rounded"
-                    onClick={() => handleSubmitStudentMarks(stu._id)}
-                  >
-                    Submit
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+              return (
+                <tr key={stu._id}>
+                  <td className="p-2 border text-center">{stu.name}</td>
+                  <td className="p-2 border text-center">
+                    <input
+                      value={marks.mcqMark || 0}
+                      className="text-center"
+                      onChange={(e) =>
+                        handleMarkChange(
+                          stu._id,
+                          "mcqMark",
+                          Number(e.target.value)
+                        )
+                      }
+                    />
+                  </td>
+                  <td className="p-2 border text-center">
+                    <input
+                      value={marks.cqMark || 0}
+                      className="text-center"
+                      onChange={(e) =>
+                        handleMarkChange(
+                          stu._id,
+                          "cqMark",
+                          Number(e.target.value)
+                        )
+                      }
+                    />
+                  </td>
+                  <td className="p-2 border text-center">
+                    <input
+                      value={marks.practicalMark || 0}
+                      className="text-center"
+                      onChange={(e) =>
+                        handleMarkChange(
+                          stu._id,
+                          "practicalMark",
+                          Number(e.target.value)
+                        )
+                      }
+                    />
+                  </td>
+                  <td className="p-2 border text-center">
+                    <input
+                      value={marks.plainMark || 0}
+                      className="text-center"
+                      onChange={(e) =>
+                        handleMarkChange(
+                          stu._id,
+                          "plainMark",
+                          Number(e.target.value)
+                        )
+                      }
+                    />
+                  </td>
+                  <td className="p-2 text-center">
+                    <Button
+                      className=" bg-blue-500 hover:bg-blue-400 text-white rounded"
+                      onClick={() => handleSubmitStudentMarks(stu._id)}
+                    >
+                      Submit
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
