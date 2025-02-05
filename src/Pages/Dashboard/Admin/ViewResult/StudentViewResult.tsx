@@ -4,7 +4,7 @@ import axiosInstance from "@/api/axiosInstance";
 import { useEffect, useState } from "react";
 
 function StudentViewResults() {
-  const studentId = "67a0ad7b0aef8cec2bf215b1"; // from context or local storage
+  const studentId = "67a363db9868419454df54b7"; // from context or local storage
   const name = "Ismail"; // from context or local storage
   const [exams, setExams] = useState<any[]>([]); //when student comes to this page auto load the exam matching exam list
   const [selectedExamId, setSelectedExamId] = useState(""); // when student picks an exam
@@ -17,7 +17,7 @@ function StudentViewResults() {
     // For example, if student is year=2025, version=Bangla, class=10, shift=Morning, section=A, group=Science
     axiosInstance
       .get(
-        "/exams?year=2025&version=Bangla&class=9&shift=Morning&section=A&group=Science"
+        "/exams?year=2026&version=Bangla&class=7&shift=Morning&section=A&group=NA"
       )
       .then((res) => {
         // console.log("initial response", res.data.data);

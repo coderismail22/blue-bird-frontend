@@ -38,6 +38,7 @@ import AddSubject from "@/Pages/Dashboard/Admin/Exam Management/AddSubject";
 import ExamRegistration from "@/Pages/Dashboard/Admin/Exam Management/ExamRegistration";
 import MarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/MarkEntry";
 import TeacherOnlyMarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/TeacherOnlyMarkEntry";
+import ExamRegisteredStudents from "@/Pages/Dashboard/Admin/Exam Management/ExamRegisteredStudents";
 
 export const router = createBrowserRouter([
   {
@@ -160,6 +161,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/admin/exam-management/exam-registration",
         element: <ExamRegistration />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/exam-registered-students",
+        element: <ExamRegisteredStudents />,
       },
       {
         path: "/dashboard/admin/exam-management/exam-archive",

@@ -218,6 +218,11 @@ export const sidebarData = {
         },
         {
           icon: FaRegListAlt,
+          label: "Registrations",
+          path: "/dashboard/admin/exam-management/exam-registered-students",
+        },
+        {
+          icon: FaRegListAlt,
           label: "Exam Archive",
           path: "/dashboard/admin/exam-management/exam-archive",
         },
