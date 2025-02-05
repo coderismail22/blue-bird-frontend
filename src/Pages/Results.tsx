@@ -178,7 +178,7 @@ const ReadOnlyResults = () => {
   };
 
   return (
-    <div className="mx-auto p-6 font-robotoCondensed">
+    <div className="mx-auto p-6 font-robotoCondensed mb-28">
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500 ">
         Find Results
       </h1>
@@ -367,59 +367,64 @@ const ReadOnlyResults = () => {
 
       {/* Table for displaying marks */}
       {selectedSubjectId && (
-        <table className="w-full mt-6 border border-gray-300">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-2 border text-center">Roll</th>
-              <th className="p-2 border text-center">Student Name</th>
-              <th className="p-2 border text-center">Photo</th>
-              <th className="p-2 border text-center">MCQ</th>
-              <th className="p-2 border text-center">CQ</th>
-              <th className="p-2 border text-center">Practical</th>
-              <th className="p-2 border text-center">Plain</th>
-              <th className="p-2 border text-center">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student) => {
-              const stu = student.studentId;
-              const marks = marksData[stu._id] || {};
+        <div className="mt-10 overflow-x-auto">
+          <h1 className="text-center my-5 font-semibold underline underline-offset-4">
+            Subject Wise Result{" "}
+          </h1>
+          <table className="w-full border border-gray-300 overflow-scroll">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-2 border text-center">Roll</th>
+                <th className="p-2 border text-center">Student Name</th>
+                <th className="p-2 border text-center">Photo</th>
+                <th className="p-2 border text-center">MCQ</th>
+                <th className="p-2 border text-center">CQ</th>
+                <th className="p-2 border text-center">Practical</th>
+                <th className="p-2 border text-center">Plain</th>
+                <th className="p-2 border text-center">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => {
+                const stu = student.studentId;
+                const marks = marksData[stu._id] || {};
 
-              return (
-                <tr key={stu._id}>
-                  <td className="p-2 border text-center">{stu.roll}</td>
-                  <td className="p-2 border text-center">{stu.name}</td>
-                  <td className="p-2  flex flex-col items-center justify-center">
-                    <img
-                      className="w-10 h-10 rounded-full"
-                      src={`${stu.profileImg}`}
-                      alt={`${stu.name || "image"}`}
-                    />
-                  </td>
-                  <td className="p-2 border text-center">
-                    {marks.mcqMark || 0}
-                  </td>
-                  <td className="p-2 border text-center">
-                    {marks.cqMark || 0}
-                  </td>
-                  <td className="p-2 border text-center">
-                    {marks.practicalMark || 0}
-                  </td>
-                  <td className="p-2 border text-center">
-                    {marks.plainMark || 0}
-                  </td>
-                  <td className="p-2 border text-center">
-                    {marks.mcqMark ||
-                      0 + marks.cqMark ||
-                      0 + marks.practicalMark ||
-                      0 + marks.plainMark ||
-                      0}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                return (
+                  <tr key={stu._id}>
+                    <td className="p-2 border text-center">{stu.roll}</td>
+                    <td className="p-2 border text-center">{stu.name}</td>
+                    <td className="p-2  flex flex-col items-center justify-center">
+                      <img
+                        className="w-10 h-10 rounded-full object-cover"
+                        src={`${stu.profileImg}`}
+                        alt={`${stu.name || "image"}`}
+                      />
+                    </td>
+                    <td className="p-2 border text-center">
+                      {marks.mcqMark || 0}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {marks.cqMark || 0}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {marks.practicalMark || 0}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {marks.plainMark || 0}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {marks.mcqMark ||
+                        0 + marks.cqMark ||
+                        0 + marks.practicalMark ||
+                        0 + marks.plainMark ||
+                        0}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
