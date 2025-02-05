@@ -178,9 +178,9 @@ const ReadOnlyResults = () => {
   };
 
   return (
-    <div className="mx-auto p-6">
+    <div className="mx-auto p-6 font-robotoCondensed">
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500 ">
-        Results
+        Find Results
       </h1>
 
       {/* Dropdowns */}
@@ -320,6 +320,49 @@ const ReadOnlyResults = () => {
             </select>
           </div>
         )}
+
+        {/* Exam Selection */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Select Exam:
+          </label>
+          <select
+            onChange={handleExamChange}
+            value={selectedExamId}
+            className="w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Choose an exam</option>
+            {exams?.map((exam) => (
+              <option key={exam._id} value={exam._id}>
+                {exam.name} ({exam.year})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Subject Selection */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-800 mb-1">
+            Select Subject:
+          </label>
+          <select
+            onChange={handleSubjectChange}
+            value={selectedSubjectId}
+            disabled={!selectedExamId}
+            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
+              !selectedExamId
+                ? "bg-gray-200 cursor-not-allowed"
+                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
+            }`}
+          >
+            <option value="">Choose a subject</option>
+            {subjects.map((subject: any) => (
+              <option key={subject._id} value={subject._id}>
+                {subject.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Table for displaying marks */}
@@ -350,7 +393,7 @@ const ReadOnlyResults = () => {
                     <img
                       className="w-10 h-10 rounded-full"
                       src={`${stu.profileImg}`}
-                      alt={`${stu.name}`}
+                      alt={`${stu.name || "image"}`}
                     />
                   </td>
                   <td className="p-2 border text-center">
@@ -366,10 +409,11 @@ const ReadOnlyResults = () => {
                     {marks.plainMark || 0}
                   </td>
                   <td className="p-2 border text-center">
-                    {marks.mcqMark +
-                      marks.cqMark +
-                      marks.practicalMark +
-                      marks.plainMark}
+                    {marks.mcqMark ||
+                      0 + marks.cqMark ||
+                      0 + marks.practicalMark ||
+                      0 + marks.plainMark ||
+                      0}
                   </td>
                 </tr>
               );
