@@ -1,30 +1,15 @@
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
-import Swal from "sweetalert2";
-import { handleAxiosError } from "@/utils/handleAxiosError";
-import { AxiosError } from "axios";
-import "../../../../styles/swal.css";
-import { Button } from "@/components/ui/button";
-
-// Save student mark
-const saveStudentMarks = async (payload: any) => {
-  const response = await axiosInstance.post(
-    "/exam-results/create-or-update",
-    payload
-  );
-  return response.data;
-};
 
 // Fetch exams dynamically based on filters
 const fetchExams = async (queryParams: string) => {
-  console.log("query params", queryParams);
   const response = await axiosInstance.get(`/exams?${queryParams}`);
   return response.data.data;
 };
 
 // Fetch students and results
-const fetchStudents = async ({ queryKey }) => {
+const fetchStudents = async ({ queryKey }: any) => {
   const [, examId] = queryKey;
   const response = await axiosInstance.get(
     `/exam-registrations?examId=${examId}`
@@ -32,7 +17,7 @@ const fetchStudents = async ({ queryKey }) => {
   return response.data.data;
 };
 
-const fetchResults = async ({ queryKey }) => {
+const fetchResults = async ({ queryKey }: any) => {
   const [, examId, examSubjectId] = queryKey;
   const response = await axiosInstance.get(
     `/exam-results?examId=${examId}&examSubjectId=${examSubjectId}`
@@ -40,9 +25,7 @@ const fetchResults = async ({ queryKey }) => {
   return response.data.data;
 };
 
-const TeacherOnlyMarkEntry = () => {
-  const queryClient = useQueryClient();
-
+const ReadOnlyResults = () => {
   // States for dropdowns
   const [years, setYears] = useState<string[]>([]);
   const [versions, setVersions] = useState<string[]>([]);
@@ -58,13 +41,13 @@ const TeacherOnlyMarkEntry = () => {
   const [selectedShift, setSelectedShift] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
-
-  // Existing states
   const [selectedExamId, setSelectedExamId] = useState("");
   const [selectedSubjectId, setSelectedSubjectId] = useState("");
+
+  // State to store subjects, marks, and students
   const [subjects, setSubjects] = useState([]);
-  const [marksData, setMarksData] = useState({});
-  const [students, setStudents] = useState([]);
+  const [marksData, setMarksData] = useState<any>({});
+  const [students, setStudents] = useState<any[]>([]);
 
   // Fetch dropdown data dynamically
   useEffect(() => {
@@ -111,6 +94,7 @@ const TeacherOnlyMarkEntry = () => {
 
   const handleShiftChange = (shift: string) => setSelectedShift(shift);
   const handleSectionChange = (section: string) => setSelectedSection(section);
+  const handleGroupChange = (group: string) => setSelectedGroup(group);
 
   const resetSelections = (keepVersion = false, keepClass = false) => {
     if (!keepVersion) setSelectedVersion("");
@@ -132,7 +116,7 @@ const TeacherOnlyMarkEntry = () => {
   }).toString();
 
   const { data: exams } = useQuery({
-    queryKey: ["teacherExams", filterParams],
+    queryKey: ["exams", filterParams],
     queryFn: () => fetchExams(filterParams),
     enabled: !!(
       selectedYear &&
@@ -159,12 +143,12 @@ const TeacherOnlyMarkEntry = () => {
   // Combine students and results data
   useEffect(() => {
     if (registeredStudents && results) {
-      const studentMarksMap = results.reduce((acc, result) => {
+      const studentMarksMap = results.reduce((acc: any, result: any) => {
         acc[result.studentId._id] = result.marks;
         return acc;
       }, {});
 
-      const combinedStudents = registeredStudents.map((registration) => ({
+      const combinedStudents = registeredStudents.map((registration: any) => ({
         ...registration,
         marks: studentMarksMap[registration.studentId._id] || {},
       }));
@@ -172,7 +156,7 @@ const TeacherOnlyMarkEntry = () => {
       setStudents(combinedStudents);
       setMarksData(
         combinedStudents.reduce(
-          (acc, student) => ({
+          (acc: any, student: any) => ({
             ...acc,
             [student.studentId._id]: student.marks,
           }),
@@ -182,25 +166,10 @@ const TeacherOnlyMarkEntry = () => {
     }
   }, [registeredStudents, results]);
 
-  // Mutation to save marks
-  const mutation = useMutation({
-    mutationFn: saveStudentMarks,
-    onSuccess: () => {
-      Swal.fire({
-        icon: "success",
-        title: "Saved",
-        text: "Student marks saved successfully.",
-      });
-      queryClient.invalidateQueries({ queryKey: ["saveMark"] });
-    },
-    onError: (err: AxiosError) =>
-      handleAxiosError(err, "Failed to save student marks"),
-  });
-
   const handleExamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const examId = event.target.value;
     setSelectedExamId(examId);
-    const selectedExam = exams?.find((exam) => exam._id === examId);
+    const selectedExam = exams?.find((exam: any) => exam._id === examId);
     if (selectedExam) setSubjects(selectedExam.subjects);
   };
 
@@ -208,45 +177,10 @@ const TeacherOnlyMarkEntry = () => {
     setSelectedSubjectId(e.target.value);
   };
 
-  const handleMarkChange = (
-    studentId: string,
-    field: string,
-    value: number
-  ) => {
-    setMarksData((prev) => ({
-      ...prev,
-      [studentId]: {
-        ...prev[studentId],
-        [field]: value,
-      },
-    }));
-  };
-
-  const handleSubmitStudentMarks = (studentId: string) => {
-    if (!selectedSubjectId) {
-      Swal.fire("Error", "Please select a subject", "error");
-      return;
-    }
-
-    const studentMarks = marksData[studentId] || {};
-    mutation.mutate({
-      examId: selectedExamId,
-      examSubjectId: selectedSubjectId,
-      studentId,
-      teacherId,
-      marks: {
-        mcqMark: studentMarks.mcqMark || 0,
-        cqMark: studentMarks.cqMark || 0,
-        practicalMark: studentMarks.practicalMark || 0,
-        plainMark: studentMarks.plainMark || 0,
-      },
-    });
-  };
-
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500">
-        Mark Entry (Super Admin Only)
+    <div className="mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500 ">
+        Results
       </h1>
 
       {/* Dropdowns */}
@@ -366,14 +300,14 @@ const TeacherOnlyMarkEntry = () => {
           </select>
         </div>
 
-        {/* Group Selection (Only for Class 9-12) */}
+        {/* Group Selection */}
         {parseInt(selectedClass) >= 9 && (
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-1">
               Group:
             </label>
             <select
-              onChange={(e) => setSelectedGroup(e.target.value)}
+              onChange={(e) => handleGroupChange(e.target.value)}
               value={selectedGroup}
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
             >
@@ -386,70 +320,23 @@ const TeacherOnlyMarkEntry = () => {
             </select>
           </div>
         )}
-
-        {/* Exam Selection */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-800 mb-1">
-            Select Exam:
-          </label>
-          <select
-            value={selectedExamId}
-            onChange={handleExamChange}
-            className="w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Choose an exam</option>
-            {exams?.map((exam) => (
-              <option key={exam._id} value={exam._id}>
-                {exam.name} ({exam.year})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Subject Selection */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-800 mb-1">
-            Select Subject:
-          </label>
-          <select
-            value={selectedSubjectId}
-            onChange={handleSubjectChange}
-            disabled={!selectedExamId}
-            className={`w-full px-4 py-2 border rounded-md shadow-sm transition-all bg-white ${
-              !selectedExamId
-                ? "bg-gray-200 cursor-not-allowed"
-                : "border-gray-300 hover:shadow-md focus:ring-2 focus:ring-blue-500"
-            }`}
-          >
-            <option value="">Choose a subject</option>
-            {subjects.map((subject) => (
-              <option
-                key={subject._id}
-                value={subject._id}
-                data-teacher-id={subject.subjectTeacher._id}
-              >
-                {subject.name} | {subject.subjectTeacher.name}
-              </option>
-            ))}
-          </select>
-        </div>
       </div>
 
-      {/* Mark Table For All Students */}
+      {/* Table for displaying marks */}
       {selectedSubjectId && (
         <table className="w-full mt-6 border border-gray-300">
-          {/* Header */}
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-2 border">Student Name</th>
-              <th className="p-2 border">MCQ</th>
-              <th className="p-2 border">CQ</th>
-              <th className="p-2 border">Practical</th>
-              <th className="p-2 border">Plain</th>
-              <th className="p-2 border">Submit</th>
+              <th className="p-2 border text-center">Roll</th>
+              <th className="p-2 border text-center">Student Name</th>
+              <th className="p-2 border text-center">Photo</th>
+              <th className="p-2 border text-center">MCQ</th>
+              <th className="p-2 border text-center">CQ</th>
+              <th className="p-2 border text-center">Practical</th>
+              <th className="p-2 border text-center">Plain</th>
+              <th className="p-2 border text-center">Total</th>
             </tr>
           </thead>
-          {/* Body */}
           <tbody>
             {students.map((student) => {
               const stu = student.studentId;
@@ -457,66 +344,32 @@ const TeacherOnlyMarkEntry = () => {
 
               return (
                 <tr key={stu._id}>
+                  <td className="p-2 border text-center">{stu.roll}</td>
                   <td className="p-2 border text-center">{stu.name}</td>
-                  <td className="p-2 border text-center">
-                    <input
-                      value={marks.mcqMark || 0}
-                      className="text-center"
-                      onChange={(e) =>
-                        handleMarkChange(
-                          stu._id,
-                          "mcqMark",
-                          Number(e.target.value)
-                        )
-                      }
+                  <td className="p-2  flex flex-col items-center justify-center">
+                    <img
+                      className="w-10 h-10 rounded-full"
+                      src={`${stu.profileImg}`}
+                      alt={`${stu.name}`}
                     />
                   </td>
                   <td className="p-2 border text-center">
-                    <input
-                      value={marks.cqMark || 0}
-                      className="text-center"
-                      onChange={(e) =>
-                        handleMarkChange(
-                          stu._id,
-                          "cqMark",
-                          Number(e.target.value)
-                        )
-                      }
-                    />
+                    {marks.mcqMark || 0}
                   </td>
                   <td className="p-2 border text-center">
-                    <input
-                      value={marks.practicalMark || 0}
-                      className="text-center"
-                      onChange={(e) =>
-                        handleMarkChange(
-                          stu._id,
-                          "practicalMark",
-                          Number(e.target.value)
-                        )
-                      }
-                    />
+                    {marks.cqMark || 0}
                   </td>
                   <td className="p-2 border text-center">
-                    <input
-                      value={marks.plainMark || 0}
-                      className="text-center"
-                      onChange={(e) =>
-                        handleMarkChange(
-                          stu._id,
-                          "plainMark",
-                          Number(e.target.value)
-                        )
-                      }
-                    />
+                    {marks.practicalMark || 0}
                   </td>
-                  <td className="p-2 text-center">
-                    <Button
-                      className=" bg-blue-500 hover:bg-blue-400 text-white rounded"
-                      onClick={() => handleSubmitStudentMarks(stu._id)}
-                    >
-                      Submit
-                    </Button>
+                  <td className="p-2 border text-center">
+                    {marks.plainMark || 0}
+                  </td>
+                  <td className="p-2 border text-center">
+                    {marks.mcqMark +
+                      marks.cqMark +
+                      marks.practicalMark +
+                      marks.plainMark}
                   </td>
                 </tr>
               );
@@ -528,4 +381,4 @@ const TeacherOnlyMarkEntry = () => {
   );
 };
 
-export default TeacherOnlyMarkEntry;
+export default ReadOnlyResults;

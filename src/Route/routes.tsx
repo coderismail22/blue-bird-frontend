@@ -39,6 +39,7 @@ import ExamRegistration from "@/Pages/Dashboard/Admin/Exam Management/ExamRegist
 import MarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/MarkEntry";
 import TeacherOnlyMarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/TeacherOnlyMarkEntry";
 import ExamRegisteredStudents from "@/Pages/Dashboard/Admin/Exam Management/ExamRegisteredStudents";
+import Results from "@/Pages/Results";
 
 export const router = createBrowserRouter([
   {
@@ -52,10 +53,6 @@ export const router = createBrowserRouter([
       {
         path: "/about-us",
         element: <AboutUs />,
-      },
-      {
-        path: "/contact",
-        element: <ContactInfo />,
       },
       {
         path: "/gallery",
@@ -72,6 +69,10 @@ export const router = createBrowserRouter([
       {
         path: "/admission",
         element: <AdmissionPage />,
+      },
+      {
+        path: "/results",
+        element: <Results />,
       },
     ],
   },

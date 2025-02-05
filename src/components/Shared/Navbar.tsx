@@ -43,6 +43,7 @@ const Navbar = () => {
     { name: "Gallery", path: "/gallery" },
     { name: "Admission", path: "/admission" },
     { name: "Contact", path: "/contact" },
+    { name: "Results", path: "/results" },
   ];
 
   const renderNavItems = (isMobile = false) =>
