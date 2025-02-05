@@ -236,8 +236,13 @@ export const sidebarData = {
     },
     {
       icon: MdOutlineNoteAlt,
-      label: "Mark Entry",
+      label: "Mark Entry (For All)",
       path: "/dashboard/teacher/mark-entry",
+    },
+    {
+      icon: MdOutlineNoteAlt,
+      label: "Mark Entry (Teacher Only)",
+      path: "/dashboard/teacher/teacher-only-mark-entry",
     },
 
     {

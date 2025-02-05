@@ -37,6 +37,7 @@ import StudentViewResults from "@/Pages/Dashboard/Admin/ViewResult/StudentViewRe
 import AddSubject from "@/Pages/Dashboard/Admin/Exam Management/AddSubject";
 import ExamRegistration from "@/Pages/Dashboard/Admin/Exam Management/ExamRegistration";
 import MarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/MarkEntry";
+import TeacherOnlyMarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/TeacherOnlyMarkEntry";
 
 export const router = createBrowserRouter([
   {
@@ -173,6 +174,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/teacher/mark-entry",
         element: <MarkEntry />,
+      },
+      {
+        path: "/dashboard/teacher/teacher-only-mark-entry",
+        element: <TeacherOnlyMarkEntry />,
       },
 
       // Role: Student

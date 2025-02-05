@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { AxiosError } from "axios";
 import "../../../../styles/swal.css";
 import { Button } from "@/components/ui/button";
+
 // Save student mark
 const saveStudentMarks = async (payload: any) => {
   const response = await axiosInstance.post(
@@ -16,35 +16,36 @@ const saveStudentMarks = async (payload: any) => {
 
   return response.data;
 };
-// Fetch functions
+
+// Fetch exam
 const fetchExams = async () => {
-  const response = await axiosInstance.get("/exams");
-  // console.log("1 fetch exams", response.data.data);
+  const response = await axiosInstance.get("/exams?year=2025&version=Bangla");
+  console.log("exams", response.data.data);
   return response.data.data;
 };
 
+// Fetch students
 const fetchStudents = async ({ queryKey }) => {
   const [, examId] = queryKey;
   const response = await axiosInstance.get(
     `/exam-registrations?examId=${examId}`
   );
-  // console.log("2 fetch students", response.data.data);
   return response.data.data;
 };
 
+// Fetch results
 const fetchResults = async ({ queryKey }) => {
   const [, examId, examSubjectId] = queryKey;
   const response = await axiosInstance.get(
     `/exam-results?examId=${examId}&examSubjectId=${examSubjectId}`
   );
-  // console.log("3 fetch result", response.data.data);
   return response.data.data;
 };
 
 // Mark Entry Component
 const MarkEntry = () => {
-  const [selectedExamId, setSelectedExamId] = useState(""); // 1.examId
-  const [selectedSubjectId, setSelectedSubjectId] = useState(""); // 2.examSubjectId
+  const [selectedExamId, setSelectedExamId] = useState(""); //
+  const [selectedSubjectId, setSelectedSubjectId] = useState("");
   const [selectedTeacherId, setSelectedTeacherId] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [marksData, setMarksData] = useState({});
@@ -104,18 +105,6 @@ const MarkEntry = () => {
     }
   }, [registeredStudents, results]);
 
-  // Save Marks Mutation
-  // const { mutate: saveMark } = useMutation({
-  //   mutationFn: saveStudentMarks,
-  //   onSuccess: () => {
-  //     Swal.fire("Success", "Marks saved successfully!", "success");
-  //   },
-  //   onError: (err) => {
-  //     console.log(err);
-  //     Swal.fire("Error", "Failed to save marks. Try again.", "error");
-  //   },
-  // });
-
   // Mutation for saving student marks (single student)
   const mutation = useMutation({
     mutationFn: saveStudentMarks,
@@ -138,7 +127,7 @@ const MarkEntry = () => {
     },
   });
 
-  // Modify this function to handle individual student submission
+  // Function to handle individual student submission
   function handleSubmitStudentMarks(studentId) {
     if (!selectedSubjectId) {
       Swal.fire("Error", "Please select a subject", "error");
@@ -171,6 +160,7 @@ const MarkEntry = () => {
 
     const selectedExam = exams.find((exam) => exam._id === examId);
     if (selectedExam) {
+      // TODO: Add and show subjects
       setSubjects(selectedExam.subjects);
     }
   }
@@ -192,6 +182,7 @@ const MarkEntry = () => {
         Mark Entry
       </h1>
 
+      {/* Exam & Subject Selection */}
       <div className="max-w-2xl mx-auto">
         {/* Exam Selection */}
         <label className="block font-medium text-gray-700 mb-2">
