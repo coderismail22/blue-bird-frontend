@@ -461,10 +461,11 @@ const TeacherOnlyMarkEntry = () => {
 
             return (
               <tr key={stu._id}>
-                <td className="p-2 border">{stu.name}</td>
-                <td className="p-2 border">
+                <td className="p-2 border text-center">{stu.name}</td>
+                <td className="p-2 border text-center">
                   <input
                     value={marks.mcqMark || 0}
+                    className="text-center"
                     onChange={(e) =>
                       handleMarkChange(
                         stu._id,
@@ -474,9 +475,10 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border text-center">
                   <input
                     value={marks.cqMark || 0}
+                    className="text-center"
                     onChange={(e) =>
                       handleMarkChange(
                         stu._id,
@@ -486,9 +488,10 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border text-center">
                   <input
                     value={marks.practicalMark || 0}
+                    className="text-center"
                     onChange={(e) =>
                       handleMarkChange(
                         stu._id,
@@ -498,9 +501,10 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border text-center">
                   <input
                     value={marks.plainMark || 0}
+                    className="text-center"
                     onChange={(e) =>
                       handleMarkChange(
                         stu._id,
@@ -510,7 +514,7 @@ const TeacherOnlyMarkEntry = () => {
                     }
                   />
                 </td>
-                <td className="p-1">
+                <td className="p-2 text-center">
                   <Button
                     className=" bg-blue-500 hover:bg-blue-400 text-white rounded"
                     onClick={() => handleSubmitStudentMarks(stu._id)}
