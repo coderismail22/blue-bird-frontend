@@ -9,7 +9,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Administration from "@/Pages/Administration/AdministrationPage";
 import AdmissionPage from "@/Pages/AdmissionPage";
 import Dashboard from "@/Pages/Dashboard/Dashboard/Dashboard";
-import AdminHome from "@/Pages/Dashboard/Admin/AdminHome/AdminHome";
+import AdminHome from "@/Pages/Dashboard/Admin/AdminProfile/AdminHome";
 import AllNotice from "@/Pages/Dashboard/Admin/Notice/AllNotice";
 import PublishNotice from "@/Pages/Dashboard/Admin/Notice/PublishNotice";
 import EditNotice from "@/Pages/Dashboard/Admin/Notice/EditNotice";
@@ -22,7 +22,7 @@ import AllTeachers from "@/Pages/Dashboard/Admin/Student Management/AllStudents"
 import RegisterStudent from "@/Pages/Dashboard/Admin/Student Management/RegisterStudent";
 import StudentInfo from "@/Pages/Dashboard/Admin/Student Management/StudentInfo";
 import RoleWrapper from "@/components/Auth/RoleWrapper/RoleWrapper";
-import StudentHome from "@/Pages/Dashboard/Student/StudentHome/StudentHome";
+import StudentHome from "@/Pages/Dashboard/Student/StudentProfile/StudentHome";
 import { ROLE } from "@/constants/role";
 import AllAdministration from "@/Pages/Dashboard/Admin/Administration/AllAdministration";
 import PublishAdministration from "@/Pages/Dashboard/Admin/Administration/PublishAdministration";
@@ -40,6 +40,9 @@ import MarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/MarkEntry";
 import TeacherOnlyMarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/TeacherOnlyMarkEntry";
 import ExamRegisteredStudents from "@/Pages/Dashboard/Admin/Exam Management/ExamRegisteredStudents";
 import ReadOnlyResults from "@/Pages/Results";
+import TeacherProfile from "@/Pages/Dashboard/Teacher/TeacherProfile/TeacherProfile";
+import StudentProfile from "@/Pages/Dashboard/Student/StudentProfile/StudentProfile";
+import AdminProfile from "@/Pages/Dashboard/Admin/AdminProfile/AdminProfile";
 
 export const router = createBrowserRouter([
   {
@@ -89,7 +92,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       // Role: Admin
-      { path: "/dashboard/admin/home", element: <AdminHome /> },
+      { path: "/dashboard/admin/admin-profile", element: <AdminProfile /> },
       // Notice Banner
       { path: "/dashboard/admin/banner-notice", element: <NoticeBanner /> },
       // Notice
@@ -125,6 +128,7 @@ export const router = createBrowserRouter([
         element: <EditAdministration />,
       },
       // Teacher Management
+
       {
         path: "/dashboard/admin/teacher-management/create-teacher",
         element: <AddTeacher />,
@@ -182,6 +186,10 @@ export const router = createBrowserRouter([
       },
       // Role: Teacher
       {
+        path: "/dashboard/teacher/teacher-profile",
+        element: <TeacherProfile />,
+      },
+      {
         path: "/dashboard/teacher/mark-entry",
         element: <MarkEntry />,
       },
@@ -189,16 +197,15 @@ export const router = createBrowserRouter([
         path: "/dashboard/teacher/teacher-only-mark-entry",
         element: <TeacherOnlyMarkEntry />,
       },
+      {
+        path: "/dashboard/see-student-results",
+        element: <ReadOnlyResults />,
+      },
 
       // Role: Student
       {
-        path: "/dashboard/student/home",
-        element: (
-          <RoleWrapper allowedRoles={[ROLE.STUDENT]}>
-            {/* <Cart /> */}
-            <StudentHome />
-          </RoleWrapper>
-        ),
+        path: "/dashboard/student/student-profile",
+        element: <StudentProfile />, //Use role wrapper if needed
       },
     ],
   },

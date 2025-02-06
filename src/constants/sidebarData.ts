@@ -2,29 +2,30 @@ import {
   FaBook,
   FaBookReader,
   FaCartArrowDown,
-  // FaCartArrowDown,
   FaChalkboardTeacher,
   FaHome,
   FaRegListAlt,
-  FaUserGraduate,
 } from "react-icons/fa";
 import { CiBoxList } from "react-icons/ci";
 
-import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline, IoMdSearch } from "react-icons/io";
 
 import {
-  MdDownloading,
   MdEditDocument,
   MdEmojiEvents,
   MdEventNote,
   MdOutlineNoteAlt,
-  MdOutlinePlayLesson,
 } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
-import { FaMoneyCheckDollar, FaPeopleRoof } from "react-icons/fa6";
+import {
+  FaMoneyCheckDollar,
+  FaPeopleGroup,
+  FaPeopleRoof,
+} from "react-icons/fa6";
 import { PiStudentFill } from "react-icons/pi";
 import { HiLightBulb } from "react-icons/hi";
 import { GiArchiveRegister } from "react-icons/gi";
+import { BsClipboardDataFill } from "react-icons/bs";
 
 export const sidebarData = {
   superAdmin: [
@@ -144,7 +145,7 @@ export const sidebarData = {
     },
   ],
   admin: [
-    // { label: "Home", path: "/dashboard/admin/home", icon: FaHome },
+    { label: "Home", path: "/dashboard/admin/admin-profile", icon: FaHome },
     {
       label: "Notice Banner",
       path: "/dashboard/admin/banner-notice",
@@ -230,26 +231,9 @@ export const sidebarData = {
     },
     {
       icon: MdOutlineNoteAlt,
-      label: "Attendance",
-      children: [
-        {
-          icon: IoMdAddCircleOutline,
-          label: "Attendance",
-          path: "/dashboard/admin/attendance-management/take-attendance",
-        },
-      ],
-    },
-    {
-      icon: MdOutlineNoteAlt,
       label: "Mark Entry (Admin)",
       path: "/dashboard/teacher/mark-entry",
     },
-    {
-      icon: MdOutlineNoteAlt,
-      label: "Mark Entry (Teacher)",
-      path: "/dashboard/teacher/teacher-only-mark-entry",
-    },
-
     {
       label: "Administration ",
       path: "/dashboard/admin/administration",
@@ -261,27 +245,31 @@ export const sidebarData = {
       icon: FaPeopleRoof,
     },
   ],
-  instructor: [
-    { label: "Home", path: "/dashboard/instructor/home", icon: FaHome },
+  teacher: [
+    { label: "Home", path: "/dashboard/teacher/teacher-profile", icon: FaHome },
+    {
+      icon: FaPeopleGroup,
+      label: "Attendance",
+      path: "/dashboard/admin/attendance-management/take-attendance",
+    },
+    {
+      icon: MdOutlineNoteAlt,
+      label: "Mark Entry",
+      path: "/dashboard/teacher/teacher-only-mark-entry",
+    },
+    {
+      icon: IoMdSearch,
+      label: "See Results",
+      path: "/dashboard/see-student-results",
+    },
   ],
   student: [
-    { label: "Home", path: "/dashboard/student/home", icon: FaHome },
-    // { label: "Cart", path: "/dashboard/student/cart", icon: FaCartArrowDown },
+    { label: "Home", path: "/dashboard/student/student-profile", icon: FaHome },
     {
-      label: "Courses",
-      icon: FaUserGraduate,
-      children: [
-        {
-          icon: MdOutlinePlayLesson,
-          label: "Enrolled Courses",
-          path: "/dashboard/student/courses/enrolled-courses",
-        },
-        {
-          icon: MdDownloading,
-          label: "Pending Courses",
-          path: "/dashboard/student/courses/pending-courses",
-        },
-      ],
+      icon: BsClipboardDataFill,
+      label: "Exam Result ",
+      path: "/dashboard/student/exam-result",
     },
+    // Upcoming Features: Routine, Notice, Events
   ],
 };

@@ -159,7 +159,7 @@ const Navbar = () => {
                       }
                       className=" flex  items-center  gap-1 w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                     >
-                     <MdOutlineLogout className="text-red-800"/> Logout
+                      <MdOutlineLogout className="text-red-800" /> Logout
                     </button>
                   </div>
                 )}
