@@ -239,7 +239,6 @@ export const sidebarData = {
         },
       ],
     },
-
     {
       icon: FaPeopleRoof,
       label: "Administration ",

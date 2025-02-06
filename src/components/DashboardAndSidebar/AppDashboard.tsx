@@ -19,7 +19,7 @@ import { FaArrowLeft } from "react-icons/fa";
 // import Loader from "../Loader/Loader";
 
 const AppDashboard = () => {
-  const role = "admin";
+  const role = "teacher";
 
   return (
     <SidebarProvider className="font-robotoCondensed">
