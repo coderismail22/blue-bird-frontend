@@ -188,7 +188,7 @@ export const sidebarData = {
         },
         {
           icon: FaRegListAlt,
-          label: "Students",
+          label: "All Students",
           path: "/dashboard/admin/student-management/student-info-page",
         },
       ],
@@ -213,36 +213,37 @@ export const sidebarData = {
           path: "/dashboard/admin/exam-management/add-exam",
         },
         {
+          icon: FaRegListAlt,
+          label: "View Exams",
+          path: "/dashboard/admin/exam-management/view-exams",
+        },
+        {
           icon: GiArchiveRegister,
           label: "Exam Registration",
           path: "/dashboard/admin/exam-management/exam-registration",
         },
         {
           icon: FaRegListAlt,
-          label: "Registrations",
+          label: "View Registration",
           path: "/dashboard/admin/exam-management/exam-registered-students",
         },
         {
-          icon: FaRegListAlt,
-          label: "Exam Archive",
-          path: "/dashboard/admin/exam-management/exam-archive",
+          icon: MdOutlineNoteAlt,
+          label: "Mark Entry",
+          path: "/dashboard/teacher/mark-entry",
+        },
+        {
+          icon: BsClipboardDataFill,
+          label: "Exam Results ",
+          path: "/dashboard/student/exam-result",
         },
       ],
     },
+
     {
-      icon: MdOutlineNoteAlt,
-      label: "Mark Entry (Admin)",
-      path: "/dashboard/teacher/mark-entry",
-    },
-    {
+      icon: FaPeopleRoof,
       label: "Administration ",
       path: "/dashboard/admin/administration",
-      icon: FaPeopleRoof,
-    },
-    {
-      label: "Exam Result ",
-      path: "/dashboard/student/exam-result",
-      icon: FaPeopleRoof,
     },
   ],
   teacher: [

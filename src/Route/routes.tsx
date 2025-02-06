@@ -43,6 +43,8 @@ import ReadOnlyResults from "@/Pages/Results";
 import TeacherProfile from "@/Pages/Dashboard/Teacher/TeacherProfile/TeacherProfile";
 import StudentProfile from "@/Pages/Dashboard/Student/StudentProfile/StudentProfile";
 import AdminProfile from "@/Pages/Dashboard/Admin/AdminProfile/AdminProfile";
+import ViewSubjects from "@/Pages/Dashboard/Admin/ViewSubjects/ViewSubjects";
+import ViewExams from "@/Pages/Dashboard/Admin/ViewExams/ViewExams";
 
 export const router = createBrowserRouter([
   {
@@ -164,6 +166,10 @@ export const router = createBrowserRouter([
         element: <AddSubject />,
       },
       {
+        path: "/dashboard/admin/exam-management/view-subjects",
+        element: <ViewSubjects />,
+      },
+      {
         path: "/dashboard/admin/exam-management/add-exam",
         element: <AddExam />,
       },
@@ -176,8 +182,8 @@ export const router = createBrowserRouter([
         element: <ExamRegisteredStudents />,
       },
       {
-        path: "/dashboard/admin/exam-management/exam-archive",
-        element: <StudentInfo />,
+        path: "/dashboard/admin/exam-management/view-exams",
+        element: <ViewExams />,
       },
       // Attendance
       {

@@ -301,69 +301,76 @@ const StudentInfo = () => {
       </div>
 
       {/* Display Students */}
-      <div className="mt-10">
-        <h2 className="text-lg font-semibold text-gray-700">Student List</h2>
-        {students.length === 0 ? (
-          <p className="text-gray-500 mt-2 text-center">No students found.</p>
-        ) : (
-          <table className="w-full mt-4 border border-gray-300 text-left rounded-md">
-            <thead>
-              <tr className="bg-blue-100">
-                <th className="p-3 border">Prime ID</th>
-                <th className="p-3 border">Custom ID</th>
-                <th className="p-3 border">Roll</th>
-                <th className="p-3 border">Name</th>
-                <th className="p-3 border">Class</th>
-                <th className="p-3 border">Shift</th>
-                <th className="p-3 border">Section</th>
-                <th className="p-3 border">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
-                <tr key={student.studentId} className="border hover:bg-gray-50">
-                  <td className="p-3 border truncate">{student._id}</td>
-                  <td className="p-3 border">{student.studentId}</td>
-                  <td className="p-3 border">{student.roll || "NA"}</td>
-                  <td className="p-3 border">{student.name}</td>
-                  <td className="p-3 border">{student.class}</td>
-                  <td className="p-3 border">{student.shift}</td>
-                  <td className="p-3 border">{student.section}</td>
-                  <td>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-5 w-5">
-                          <BiDotsVertical className="h-10 w-10" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          onClick={() => handleFullStudentInfo(student._id)}
-                        >
-                          <IoIosInformationCircleOutline className="text-green-700" />
-                          <p className="text-[12px]">Full Info</p>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleEdit(student._id)}
-                        >
-                          <FaRegEdit className="text-green-700" />
-                          <p className="text-[12px]">Edit</p>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                        // onClick={() => handleDelete(teacher._id)}
-                        >
-                          <FaTrash className="text-red-500" />
-                          <p className="text-[12px]">Delete</p>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </td>
+      {students && (
+        <div className="mt-10">
+          <h2 className="text-center underline underline-offset-4 text-lg font-semibold text-gray-700">
+            Student List
+          </h2>
+          {students.length === 0 ? (
+            <p className="text-gray-500 mt-2 text-center">No students found.</p>
+          ) : (
+            <table className="w-full mt-4 border border-gray-300 text-left rounded-md">
+              <thead>
+                <tr className="bg-blue-100">
+                  <th className="p-3 border">Prime ID</th>
+                  <th className="p-3 border">Custom ID</th>
+                  <th className="p-3 border">Roll</th>
+                  <th className="p-3 border">Name</th>
+                  <th className="p-3 border">Class</th>
+                  <th className="p-3 border">Shift</th>
+                  <th className="p-3 border">Section</th>
+                  <th className="p-3 border">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {students.map((student) => (
+                  <tr
+                    key={student.studentId}
+                    className="border hover:bg-gray-50"
+                  >
+                    <td className="p-3 border truncate">{student._id}</td>
+                    <td className="p-3 border">{student.studentId}</td>
+                    <td className="p-3 border">{student.roll || "NA"}</td>
+                    <td className="p-3 border">{student.name}</td>
+                    <td className="p-3 border">{student.class}</td>
+                    <td className="p-3 border">{student.shift}</td>
+                    <td className="p-3 border">{student.section}</td>
+                    <td>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-5 w-5">
+                            <BiDotsVertical className="h-10 w-10" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() => handleFullStudentInfo(student._id)}
+                          >
+                            <IoIosInformationCircleOutline className="text-green-700" />
+                            <p className="text-[12px]">Full Info</p>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleEdit(student._id)}
+                          >
+                            <FaRegEdit className="text-green-700" />
+                            <p className="text-[12px]">Edit</p>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                          // onClick={() => handleDelete(teacher._id)}
+                          >
+                            <FaTrash className="text-red-500" />
+                            <p className="text-[12px]">Delete</p>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
     </div>
   );
 };
