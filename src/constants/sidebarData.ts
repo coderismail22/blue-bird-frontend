@@ -235,7 +235,7 @@ export const sidebarData = {
         {
           icon: BsClipboardDataFill,
           label: "Exam Results ",
-          path: "/dashboard/student/exam-result",
+          path: "/dashboard/admin/exam-management/view-exam-results",
         },
       ],
     },

@@ -9,7 +9,6 @@ import { createBrowserRouter } from "react-router-dom";
 import Administration from "@/Pages/Administration/AdministrationPage";
 import AdmissionPage from "@/Pages/AdmissionPage";
 import Dashboard from "@/Pages/Dashboard/Dashboard/Dashboard";
-import AdminHome from "@/Pages/Dashboard/Admin/AdminProfile/AdminHome";
 import AllNotice from "@/Pages/Dashboard/Admin/Notice/AllNotice";
 import PublishNotice from "@/Pages/Dashboard/Admin/Notice/PublishNotice";
 import EditNotice from "@/Pages/Dashboard/Admin/Notice/EditNotice";
@@ -21,9 +20,6 @@ import EditTeacher from "@/Pages/Dashboard/Admin/Student Management/EditStudent"
 import AllTeachers from "@/Pages/Dashboard/Admin/Student Management/AllStudents";
 import RegisterStudent from "@/Pages/Dashboard/Admin/Student Management/RegisterStudent";
 import StudentInfo from "@/Pages/Dashboard/Admin/Student Management/StudentInfo";
-import RoleWrapper from "@/components/Auth/RoleWrapper/RoleWrapper";
-import StudentHome from "@/Pages/Dashboard/Student/StudentProfile/StudentHome";
-import { ROLE } from "@/constants/role";
 import AllAdministration from "@/Pages/Dashboard/Admin/Administration/AllAdministration";
 import PublishAdministration from "@/Pages/Dashboard/Admin/Administration/PublishAdministration";
 import EditAdministration from "@/Pages/Dashboard/Admin/Administration/EditAdministration";
@@ -184,6 +180,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/admin/exam-management/view-exams",
         element: <ViewExams />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/view-exam-results",
+        element: <ReadOnlyResults />,
       },
       // Attendance
       {
