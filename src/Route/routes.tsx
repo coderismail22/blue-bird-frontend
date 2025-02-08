@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       // Role: Admin
-      { path: "/dashboard/admin/admin-profile", element: <AdminProfile /> },
+      { path: "/dashboard/admin/profile", element: <AdminProfile /> },
       // Notice Banner
       { path: "/dashboard/admin/banner-notice", element: <NoticeBanner /> },
       // Notice
@@ -192,7 +192,7 @@ export const router = createBrowserRouter([
       },
       // Role: Teacher
       {
-        path: "/dashboard/teacher/teacher-profile",
+        path: "/dashboard/teacher/profile",
         element: <TeacherProfile />,
       },
       {
@@ -210,7 +210,7 @@ export const router = createBrowserRouter([
 
       // Role: Student
       {
-        path: "/dashboard/student/student-profile",
+        path: "/dashboard/student/profile",
         element: <StudentProfile />, //Use role wrapper if needed
       },
     ],

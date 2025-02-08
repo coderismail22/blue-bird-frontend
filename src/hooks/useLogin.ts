@@ -80,7 +80,7 @@ export const useLogin = () => {
         },
       }).then(() => {
         const from =
-          location.state?.from || `/dashboard/${authState?.role}/home`;
+          location.state?.from || `/dashboard/${authState?.role}/profile`;
         navigate(from, { replace: true });
       });
     },

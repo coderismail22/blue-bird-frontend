@@ -5,37 +5,46 @@ import { useState, useRef, useEffect } from "react";
 import { MdOutlineLogout } from "react-icons/md";
 import { GoChevronDown } from "react-icons/go";
 import { Button } from "../ui/button";
-
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { AuthState } from "@/hooks/useLogin";
+import { authKey } from "@/api/authKey";
+import Swal from "sweetalert2";
+import "../../styles/swal.css";
+import { useLogout } from "@/hooks/useLogout";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const role = null;
-  let isLoggedIn = false;
-  // let role = null;
-  // let isLoggedIn = false;
-  const handleLogOut = () => {
-    isLoggedIn = false;
-    // role = null;
-  };
-  // Simulated user object
-  const [user, setUser] = useState({
-    isLoggedIn: true, // Toggle this to simulate login/logout
-    name: "John Doe",
-    profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
+  const queryClient = useQueryClient();
+  // Use useQuery to subscribe to authKey changes
+  const { data: authData } = useQuery<AuthState>({
+    queryKey: authKey,
+    // Automatically refresh auth state whenever authKey changes
+    // TODO: Check potential error here
+    initialData: queryClient.getQueryData<AuthState>(authKey),
   });
+  const isLoggedIn = !!authData;
+  const role = authData?.role || null;
+  const logoutMutation = useLogout();
 
-  const profileRef = useRef(null);
+  const handleLogOut = () => {
+    logoutMutation.mutate(); // Trigger the logout process
+    Swal.fire({
+      title: "Logged out successfully",
+      text: "See You Again",
+      icon: "success",
+    });
+  };
 
+  const profileRef = useRef<HTMLElement>(null);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
-  const toggleDrawer = () => setIsDrawerOpen((prev) => !prev);
   const toggleProfileDropdown = () => setIsProfileDropdownOpen((prev) => !prev);
   const closeProfileDropdown = () => setIsProfileDropdownOpen(false);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleClickOutside = (event: any) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         closeProfileDropdown();
       }
@@ -72,30 +81,6 @@ const Navbar = () => {
       </NavLink>
     ));
 
-  const navlinks = (
-    <>
-      <div className="flex flex-col lg:flex-row text-[16px] gap-1">
-        <li>
-          <NavLink to="/">হোম </NavLink>
-        </li>
-        <li>
-          <NavLink to="/courses">কোর্স সমূহ</NavLink>
-        </li>
-        <li>
-          <NavLink to="/workshop">ওয়ার্কশপ</NavLink>
-        </li>
-        <li>
-          <NavLink to="/internship">ইন্টার্নশিপ</NavLink>
-        </li>
-        <li>
-          <NavLink to="/about">আমাদের সম্পর্কে</NavLink>
-        </li>
-        <li>
-          <NavLink to="/contact">যোগাযোগ</NavLink>
-        </li>
-      </div>
-    </>
-  );
   return (
     <>
       {/* Main Navbar */}
@@ -212,16 +197,16 @@ const Navbar = () => {
 
           {/* Login/Profile Section Aligned to Right */}
           <div className="hidden md:flex items-center space-x-6">
-            {user.isLoggedIn ? (
+            {isLoggedIn ? (
               <div className="relative" ref={profileRef}>
                 <button
                   onClick={toggleProfileDropdown}
                   className="flex items-center space-x-2 focus:outline-none"
                 >
                   <img
-                    src={user.profileImage}
+                    src="/profile.png"
                     alt="Profile"
-                    className="size-8 rounded-full border-2 border-gray-200"
+                    className="size-8 rounded-full border-2 border-gray-200 bg-gradient-to-tr from-[#6a82fb] to-[#fc5c7d]  hover:from-[#fc5c7d] hover:to-[#6a82fb]"
                   />
                 </button>
 
@@ -238,12 +223,7 @@ const Navbar = () => {
                       Dashboard
                     </NavLink>
                     <button
-                      onClick={() =>
-                        setUser((prev) => ({
-                          ...prev,
-                          isLoggedIn: false,
-                        }))
-                      }
+                      onClick={() => handleLogOut()}
                       className=" flex  items-center  gap-1 w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                     >
                       <MdOutlineLogout className="text-red-800" /> Logout
@@ -252,12 +232,11 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <NavLink
-                to="/auth/login"
-                className="text-white text-lg px-4 py-2 hover:text-cyan-200"
-              >
-                Login
-              </NavLink>
+              <Link to="/auth/login">
+                <Button className="bg-gradient-to-tr from-[#6a82fb] to-[#fc5c7d]  hover:from-[#fc5c7d] hover:to-[#6a82fb]">
+                  Login
+                </Button>
+              </Link>
             )}
           </div>
 
@@ -291,7 +270,7 @@ const Navbar = () => {
             </button>
             <div className="flex flex-col space-y-6 text-center overflow-auto">
               {renderNavItems(true)}
-              {user.isLoggedIn ? (
+              {isLoggedIn ? (
                 <>
                   <NavLink
                     to="/dashboard"
@@ -301,26 +280,18 @@ const Navbar = () => {
                     Dashboard
                   </NavLink>
                   <button
-                    onClick={() => {
-                      setUser((prev) => ({
-                        ...prev,
-                        isLoggedIn: false,
-                      }));
-                      toggleMenu();
-                    }}
+                    onClick={() => handleLogOut()}
                     className="text-white hover:text-gray-400"
                   >
                     Logout
                   </button>
                 </>
               ) : (
-                <NavLink
-                  to="/auth/login"
-                  className="text-white hover:text-gray-400"
-                  onClick={toggleMenu}
-                >
-                  Login
-                </NavLink>
+                <Link to="/auth/login">
+                  <Button className="bg-gradient-to-tr from-[#6a82fb] to-[#fc5c7d]  hover:from-[#fc5c7d] hover:to-[#6a82fb]">
+                    Login
+                  </Button>
+                </Link>
               )}
             </div>
           </motion.div>

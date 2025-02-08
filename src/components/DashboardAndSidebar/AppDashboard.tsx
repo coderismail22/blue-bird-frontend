@@ -10,16 +10,32 @@ import {
   BreadcrumbList,
 } from "@/components/ui/breadcrumb";
 
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/DashboardAndSidebar/AppSidebar";
 import CustomBreadcrumbLink from "../CustomBreadcrumbLink/CustomBreadcrumbLink";
 import LogoutButton from "../LogoutButton/LogoutButton";
 // import { authKey } from "@/api/authKey";
 import { FaArrowLeft } from "react-icons/fa";
+import { useQueryClient } from "@tanstack/react-query";
+import { authKey } from "@/api/authKey";
+import { useRole } from "@/hooks/useRole";
+import Loader from "../Loader/Loader";
 // import Loader from "../Loader/Loader";
 
 const AppDashboard = () => {
-  const role = "teacher";
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const authData = queryClient.getQueryData(authKey);
+  // TODO: Add static role type instead of current void
+  const role = useRole();
+  // While redirecting, role will be undefined, so render nothing
+  if (!role) {
+    navigate("/auth/login");
+    return null; // Prevent further rendering while redirecting
+  }
+  if (!authData) {
+    <Loader />; // Wait until authKey is set
+  }
 
   return (
     <SidebarProvider className="font-robotoCondensed">

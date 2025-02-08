@@ -145,7 +145,7 @@ export const sidebarData = {
     },
   ],
   admin: [
-    { label: "Home", path: "/dashboard/admin/admin-profile", icon: FaHome },
+    { label: "Home", path: "/dashboard/admin/profile", icon: FaHome },
     {
       label: "Notice Banner",
       path: "/dashboard/admin/banner-notice",
@@ -246,7 +246,7 @@ export const sidebarData = {
     },
   ],
   teacher: [
-    { label: "Home", path: "/dashboard/teacher/teacher-profile", icon: FaHome },
+    { label: "Home", path: "/dashboard/teacher/profile", icon: FaHome },
     {
       icon: FaPeopleGroup,
       label: "Attendance",
@@ -264,7 +264,7 @@ export const sidebarData = {
     },
   ],
   student: [
-    { label: "Home", path: "/dashboard/student/student-profile", icon: FaHome },
+    { label: "Home", path: "/dashboard/student/profile", icon: FaHome },
     {
       icon: BsClipboardDataFill,
       label: "Exam Result ",
