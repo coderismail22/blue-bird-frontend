@@ -11,6 +11,7 @@ import AppInputPassword from "@/components/CustomForm/AppInputPassword";
 import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
+import AppDatePicker from "@/components/CustomForm/AppDatePicker";
 
 // Create teacher function
 const createTeacher = async (teacherData: {
@@ -82,7 +83,7 @@ const AddTeacher = () => {
         onSubmit={onSubmit}
         defaultValues={{
           name: "",
-          teacherId: "",
+          teacherId: "", // email as teacherId
           email: "",
           password: "",
           address: "",
@@ -99,13 +100,6 @@ const AddTeacher = () => {
           placeholder="Enter teacher name"
         />
 
-        {/* Teacher ID */}
-        <AppInput
-          name="teacherId"
-          label="Teacher ID"
-          placeholder="Enter teacher ID"
-        />
-
         {/* Image Upload Section */}
         <div className="text-sm truncate my-4">
           <label className="block font-medium text-black ">
@@ -117,23 +111,13 @@ const AddTeacher = () => {
           )}
         </div>
 
-        {/* Email */}
-        <AppInput name="email" label="Email" placeholder="Enter email" />
-
-        {/* Password */}
-        <AppInputPassword
-          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
-          name="password"
-          label="Password"
-          labelStyles="text-black"
-          placeholder="Enter your password"
+        {/* DOB */}
+        <AppDatePicker
+          name="dob"
+          label="Date of Birth"
+          placeholder="Select a date"
         />
-        {/* Phone */}
-        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
-        {/* Salary */}
-        <AppInput name="salary" label="Salary" placeholder="Enter salary" />
-        {/* Address */}
-        <AppInput name="address" label="Address" placeholder="Enter Address" />
+
         {/* Blood Group */}
         <AppSelect
           name="bloodGroup"
@@ -174,6 +158,76 @@ const AddTeacher = () => {
             },
           ]}
         />
+
+        {/* Gender */}
+        <AppSelect
+          name="gender"
+          label="Gender"
+          placeholder="Select a gender"
+          options={[
+            {
+              value: "Male",
+              label: "Male",
+            },
+            {
+              value: "Female",
+              label: "Female",
+            },
+          ]}
+        />
+
+        {/* Designation */}
+        <AppSelect
+          name="designation"
+          label="Designation"
+          placeholder="Select a designation"
+          options={[
+            {
+              value: "Lecturer",
+              label: "Lecturer",
+            },
+            {
+              value: "Assistant Teacher",
+              label: "Assistant Teacher",
+            },
+          ]}
+        />
+
+        {/* Subject */}
+        <AppInput
+          name="subject"
+          label="Subject"
+          placeholder="Enter subject name"
+        />
+
+        {/* Phone */}
+        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
+
+        {/* Email */}
+        <AppInput name="email" label="Email" placeholder="Enter email" />
+
+        {/* Password */}
+        <AppInputPassword
+          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
+          name="password"
+          label="Password"
+          labelStyles="text-black"
+          placeholder="Enter your password"
+        />
+
+
+        {/* Salary */}
+        <AppInput name="salary" label="Salary" placeholder="Enter salary" />
+
+        {/* Address */}
+        <AppInput name="address" label="Address" placeholder="Enter Address" />
+
+        {/* Teacher ID */}
+        {/* <AppInput
+          name="teacherId"
+          label="Teacher ID"
+          placeholder="Enter teacher ID"
+        /> */}
       </AppForm>
     </div>
   );

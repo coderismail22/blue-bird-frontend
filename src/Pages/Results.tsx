@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
-import { IoMdSearch } from "react-icons/io";
 
 // Fetch exams dynamically based on filters
 const fetchExams = async (queryParams: string) => {

@@ -41,6 +41,7 @@ import StudentProfile from "@/Pages/Dashboard/Student/StudentProfile/StudentProf
 import AdminProfile from "@/Pages/Dashboard/Admin/AdminProfile/AdminProfile";
 import ViewSubjects from "@/Pages/Dashboard/Admin/ViewSubjects/ViewSubjects";
 import ViewExams from "@/Pages/Dashboard/Admin/ViewExams/ViewExams";
+import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -84,9 +85,9 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      // <ProtectedRoute>
-      <Dashboard />
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
     ),
     children: [
       // Role: Admin

@@ -16,7 +16,7 @@ import AppYearPicker from "@/components/CustomForm/AppYearPicker";
 // Register student function
 const registerStudent = async (studentData: {
   name: string;
-  studentId: string;
+  studentId: string; //birth
   roll: string;
   profileImg: string;
   email: string;
@@ -95,7 +95,7 @@ const RegisterStudent = () => {
         onSubmit={onSubmit}
         defaultValues={{
           name: "",
-          studentId: "",
+          studentId: "", // birth registration number as studentid
           roll: "",
           email: "",
           password: "",
@@ -119,19 +119,6 @@ const RegisterStudent = () => {
           placeholder="Enter student name"
         />
 
-        {/* Student ID */}
-        <AppInput
-          name="studentId"
-          label="Student ID"
-          placeholder="Enter student ID"
-        />
-        {/* Roll */}
-        <AppInput
-          name="roll"
-          label="Class Roll"
-          placeholder="Enter student class roll"
-        />
-
         {/* Image Upload Section */}
         <div className="text-sm truncate my-4">
           <label className="block font-medium text-black ">
@@ -143,30 +130,17 @@ const RegisterStudent = () => {
           )}
         </div>
 
-        {/* Email */}
-        <AppInput name="email" label="Email" placeholder="Enter email" />
+        {/* Year Picker */}
+        <AppYearPicker name="year" label="Year" />
 
-        {/* Password */}
-        <AppInputPassword
-          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
-          name="password"
-          label="Password"
-          labelStyles="text-black"
-          placeholder="Enter your password"
-        />
-
-        {/* Phone */}
-        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
-
-        {/* Guardian Name */}
+        {/* Birth Registration Number */}
         <AppInput
-          name="guardianName"
-          label="Guardian Name"
-          placeholder="Enter guardian's name"
+          name="birthRegId"
+          label="Birth Registration Number"
+          placeholder="Enter birth registration number"
         />
 
-        {/* Address */}
-        <AppInput name="address" label="Address" placeholder="Enter address" />
+
 
         {/* Blood Group */}
         <AppSelect
@@ -185,31 +159,28 @@ const RegisterStudent = () => {
           ]}
         />
 
-        {/* Year Picker */}
-        <AppYearPicker name="year" label="Year" />
-
-        {/* Version*/}
+        {/* Gender */}
         <AppSelect
-          name="version"
-          label="Version"
-          placeholder="Select a version"
+          name="gender"
+          label="Gender"
+          placeholder="Select a gender"
           options={[
-            { value: "Bangla", label: "Bangla" },
-            { value: "English", label: "English" },
+            {
+              value: "Male",
+              label: "Male",
+            },
+            {
+              value: "Female",
+              label: "Female",
+            },
           ]}
         />
+        
+        {/* Student ID */}
+        {/* Student ID Will Be His Birth Registration Number */}
 
-        {/* Shift */}
-        <AppSelect
-          name="shift"
-          label="Shift"
-          placeholder="Select a shift"
-          options={[
-            { value: "Morning", label: "Morning" },
-            { value: "Day", label: "Day" },
-            { value: "Evening", label: "Evening" },
-          ]}
-        />
+        {/* Phone */}
+        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
 
         {/* Class */}
         <AppSelect
@@ -248,6 +219,77 @@ const RegisterStudent = () => {
             { value: "Commerce", label: "Commerce" },
             { value: "NA", label: "NA" },
           ]}
+        />
+
+        {/* Version*/}
+        <AppSelect
+          name="version"
+          label="Version"
+          placeholder="Select a version"
+          options={[
+            { value: "Bangla", label: "Bangla" },
+            { value: "English", label: "English" },
+          ]}
+        />
+
+        {/* Shift */}
+        <AppSelect
+          name="shift"
+          label="Shift"
+          placeholder="Select a shift"
+          options={[
+            { value: "Morning", label: "Morning" },
+            { value: "Day", label: "Day" },
+            { value: "Evening", label: "Evening" },
+          ]}
+        />
+
+        {/* Roll */}
+        <AppInput
+          name="roll"
+          label="Class Roll"
+          placeholder="Enter student class roll"
+        />
+
+        {/* Father's Name */}
+        <AppInput
+          name="fatherName"
+          label="Father's Name"
+          placeholder="Enter father's name"
+        />
+
+        {/* Father's Phone Number */}
+        <AppInput
+          name="fatherPhone"
+          label="Father's Phone Number"
+          placeholder="Enter father's phone number"
+        />
+
+        {/* Mother's Name */}
+        <AppInput
+          name="motherName"
+          label="Mother's Name"
+          placeholder="Enter mother's name"
+        />
+        {/* Mother's Phone Number */}
+        <AppInput
+          name="motherPhone"
+          label="Mother's Phone Number"
+          placeholder="Enter mother's phone number"
+        />
+        {/* Address */}
+        <AppInput name="address" label="Address" placeholder="Enter Address" />
+
+        {/* Email */}
+        <AppInput name="email" label="Email" placeholder="Enter email" />
+
+        {/* Password */}
+        <AppInputPassword
+          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
+          name="password"
+          label="Password"
+          labelStyles="text-black"
+          placeholder="Enter your password"
         />
       </AppForm>
     </div>
