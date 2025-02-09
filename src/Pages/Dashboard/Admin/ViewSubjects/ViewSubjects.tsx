@@ -46,8 +46,7 @@ const ViewSubjects = () => {
 
   // State to store subjects, marks, and students
   const [subjects, setSubjects] = useState([]);
-  const [marksData, setMarksData] = useState<any>({});
-  const [students, setStudents] = useState<any[]>([]);
+
 
   // Fetch dropdown data dynamically
   useEffect(() => {
@@ -102,7 +101,6 @@ const ViewSubjects = () => {
     setSelectedShift("");
     setSelectedSection("");
     setSelectedGroup("");
-    setStudents([]);
   };
 
   // Fetch exams based on filters
@@ -140,31 +138,7 @@ const ViewSubjects = () => {
     enabled: !!selectedExamId && !!selectedSubjectId,
   });
 
-  // Combine students and results data
-  useEffect(() => {
-    if (registeredStudents && results) {
-      const studentMarksMap = results.reduce((acc: any, result: any) => {
-        acc[result.studentId._id] = result.marks;
-        return acc;
-      }, {});
 
-      const combinedStudents = registeredStudents.map((registration: any) => ({
-        ...registration,
-        marks: studentMarksMap[registration.studentId._id] || {},
-      }));
-
-      setStudents(combinedStudents);
-      setMarksData(
-        combinedStudents.reduce(
-          (acc: any, student: any) => ({
-            ...acc,
-            [student.studentId._id]: student.marks,
-          }),
-          {}
-        )
-      );
-    }
-  }, [registeredStudents, results]);
 
   const handleExamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const examId = event.target.value;
@@ -173,9 +147,7 @@ const ViewSubjects = () => {
     if (selectedExam) setSubjects(selectedExam.subjects);
   };
 
-  const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSubjectId(e.target.value);
-  };
+
 
   return (
     <div className="mx-auto p-6 font-robotoCondensed mb-28">
