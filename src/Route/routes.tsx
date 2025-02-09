@@ -17,7 +17,7 @@ import PublishEvent from "@/Pages/Dashboard/Admin/Event/PublishEvent";
 import EditEvent from "@/Pages/Dashboard/Admin/Event/EditEvent";
 import AddTeacher from "@/Pages/Dashboard/Admin/Teacher Management/AddTeacher";
 import EditTeacher from "@/Pages/Dashboard/Admin/Student Management/EditStudent";
-import AllTeachers from "@/Pages/Dashboard/Admin/Student Management/AllStudents";
+import AllStudents from "@/Pages/Dashboard/Admin/Student Management/AllStudents";
 import RegisterStudent from "@/Pages/Dashboard/Admin/Student Management/RegisterStudent";
 import StudentInfo from "@/Pages/Dashboard/Admin/Student Management/StudentInfo";
 import AllAdministration from "@/Pages/Dashboard/Admin/Administration/AllAdministration";
@@ -42,6 +42,7 @@ import AdminProfile from "@/Pages/Dashboard/Admin/AdminProfile/AdminProfile";
 import ViewSubjects from "@/Pages/Dashboard/Admin/ViewSubjects/ViewSubjects";
 import ViewExams from "@/Pages/Dashboard/Admin/ViewExams/ViewExams";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import AllTeachers from "@/Pages/Dashboard/Admin/Teacher Management/AllTeachers";
 
 export const router = createBrowserRouter([
   {

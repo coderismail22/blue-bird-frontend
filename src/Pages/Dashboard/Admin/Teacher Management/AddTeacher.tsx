@@ -16,13 +16,16 @@ import AppDatePicker from "@/components/CustomForm/AppDatePicker";
 // Create teacher function
 const createTeacher = async (teacherData: {
   name: string;
-  teacherId: string;
   profileImg: string;
+  teacherId: string;
+  dob: string;
+  gender: string;
+  designation: string;
+  subject: string;
   email: string;
   password: string;
   phone: string;
   bloodGroup: string;
-  salary: number;
   address: string;
 }) => {
   const response = await axiosInstance.post(
@@ -47,27 +50,28 @@ const AddTeacher = () => {
       navigate("/dashboard/admin/teacher-management/all-teachers");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
-      console.log(err);
       handleAxiosError(err, "Failed to add teacher");
-      // Swal.fire("Error!", "Failed to add teacher. Please try again.", "error");
     },
   });
 
   const onSubmit = (data: {
     name: string;
-    teacherId: string;
     profileImg: string;
+    teacherId: string;
+    dob: string;
+    gender: string;
+    designation: string;
+    subject: string;
     email: string;
     password: string;
     phone: string;
     bloodGroup: string;
-    salary: number;
     address: string;
   }) => {
     const finalData = {
       ...data,
       profileImg,
-      salary: Number(data.salary),
+      teacherId: data?.email,
     };
 
     mutation.mutate(finalData);
@@ -83,11 +87,13 @@ const AddTeacher = () => {
         onSubmit={onSubmit}
         defaultValues={{
           name: "",
-          teacherId: "", // email as teacherId
+          dob: "",
+          gender: "",
+          designation: "",
+          subject: "",
           email: "",
           password: "",
           address: "",
-          salary: 0,
           phone: "",
           bloodGroup: "",
         }}
@@ -201,7 +207,11 @@ const AddTeacher = () => {
         />
 
         {/* Phone */}
-        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
+        <AppInput
+          name="phone"
+          label="Phone Number"
+          placeholder="Enter phone number"
+        />
 
         {/* Email */}
         <AppInput name="email" label="Email" placeholder="Enter email" />
@@ -215,19 +225,8 @@ const AddTeacher = () => {
           placeholder="Enter your password"
         />
 
-
-        {/* Salary */}
-        <AppInput name="salary" label="Salary" placeholder="Enter salary" />
-
         {/* Address */}
         <AppInput name="address" label="Address" placeholder="Enter Address" />
-
-        {/* Teacher ID */}
-        {/* <AppInput
-          name="teacherId"
-          label="Teacher ID"
-          placeholder="Enter teacher ID"
-        /> */}
       </AppForm>
     </div>
   );

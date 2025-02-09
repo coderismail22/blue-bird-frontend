@@ -159,9 +159,6 @@ const EditTeacher = () => {
         {/* Phone */}
         <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
 
-        {/* Salary */}
-        <AppInput name="salary" label="Salary" placeholder="Enter salary" />
-
         {/* Address */}
         <AppInput name="address" label="Address" placeholder="Enter Address" />
 

@@ -18,7 +18,7 @@ const deleteTeacher = async (teacherId: string) => {
   await axiosInstance.delete(`/teachers/${teacherId}`);
 };
 
-const AllTeachers = () => {
+const AllStudents = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -89,4 +89,4 @@ const AllTeachers = () => {
   );
 };
 
-export default AllTeachers;
+export default AllStudents;

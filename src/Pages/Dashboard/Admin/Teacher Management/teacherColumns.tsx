@@ -36,8 +36,12 @@ export const teacherColumns = (
     header: "Email",
   },
   {
-    accessorKey: "salary",
-    header: "Salary",
+    accessorKey: "address",
+    header: "Address",
+  },
+  {
+    accessorKey: "subject",
+    header: "Subject",
   },
   {
     id: "actions",

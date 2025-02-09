@@ -12,7 +12,7 @@ import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import AppYearPicker from "@/components/CustomForm/AppYearPicker";
-
+import "../../../../styles/swal.css"
 // Register student function
 const registerStudent = async (studentData: {
   name: string;
@@ -49,7 +49,17 @@ const RegisterStudent = () => {
   const mutation = useMutation({
     mutationFn: registerStudent,
     onSuccess: () => {
-      Swal.fire("Success!", "Student registered successfully!", "success");
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Student registered successfully!",
+        customClass: {
+          title: "custom-title",
+          popup: "custom-popup",
+          icon: "custom-icon",
+          confirmButton: "custom-confirm-btn",
+        },
+      });
       queryClient.invalidateQueries({ queryKey: ["students"] });
       navigate("/dashboard/admin/student-management/register-student");
     },
@@ -140,8 +150,6 @@ const RegisterStudent = () => {
           placeholder="Enter birth registration number"
         />
 
-
-
         {/* Blood Group */}
         <AppSelect
           name="bloodGroup"
@@ -175,7 +183,7 @@ const RegisterStudent = () => {
             },
           ]}
         />
-        
+
         {/* Student ID */}
         {/* Student ID Will Be His Birth Registration Number */}
 
