@@ -128,56 +128,14 @@ const ViewRegistrations = () => {
   const handleLoadRegistrations = async (selectedExamId: string) => {
     try {
       const response = await axiosInstance.get(
-        `/exam-registrations/${selectedExamId}`
+        `/exam-registrations/exam-specific-registrations/${selectedExamId}`
       );
       console.log("Registrations:", response.data.data); // Check `data.data`
 
       setExamRegistrations(response.data.data);
     } catch (error) {
-      console.log("Error fetching registrations:", error);
+      handleAxiosError(error, "Failed to fetch registrations");
     }
-  };
-
-  // Register students API call
-  const mutation = useMutation({
-    mutationFn: async (data: { examId: string; studentIds: string[] }) => {
-      const response = await axiosInstance.post(
-        "/exam-registrations/bulk-register",
-        data
-      );
-      return response.data;
-    },
-    onSuccess: () => {
-      Swal.fire({
-        icon: "success",
-        title: "Registered!",
-        text: "Students successfully registered for the exam.",
-      });
-    },
-    onError: (err: AxiosError) =>
-      handleAxiosError(err, "Failed to register students"),
-  });
-
-  // Exam Registration Form Submit Handler
-  // TODO: Add a type here
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = (data: any) => {
-    if (!selectedExamId) {
-      Swal.fire("Error", "Please select an exam", "error");
-      return;
-    }
-    if (data?.students?.length === 0) {
-      Swal.fire("Error", "Please select at least one student", "error");
-      return;
-    }
-    // Create the payload for registration
-    const payload = {
-      examId: selectedExamId,
-      studentIds: data?.students,
-    };
-
-    // Call the mutation with the payload
-    mutation.mutate(payload);
   };
 
   return (
@@ -364,21 +322,39 @@ const ViewRegistrations = () => {
           <table className="w-full border border-gray-300 overflow-scroll">
             <thead className="bg-gray-100">
               <tr>
-                <th className="w-[15px] p-2 border text-center">SL</th>
                 <th className="w-[15px] p-2 border text-center">Roll</th>
                 <th className="p-2 border text-center">Name</th>
+                <th className="w-[15px] p-2 border text-center">Class</th>
+                <th className="w-[15px] p-2 border text-center">Version</th>
+                <th className="w-[15px] p-2 border text-center">Shift</th>
+                <th className="w-[15px] p-2 border text-center">Section</th>
+                <th className="w-[15px] p-2 border text-center">Group</th>
               </tr>
             </thead>
             <tbody>
               {examRegistrations.map((examRegistration, index) => {
                 return (
                   <tr key={index}>
-                    <td className="p-2 border text-center">{index + 1}</td>
                     <td className="p-2 border text-center">
                       {examRegistration?.studentId?.roll}
                     </td>
                     <td className="p-2 border text-center">
                       {examRegistration?.studentId?.name}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {examRegistration?.studentId?.class}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {examRegistration?.studentId?.version}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {examRegistration?.studentId?.shift}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {examRegistration?.studentId?.section}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {examRegistration?.studentId?.group || "NA"}
                     </td>
                   </tr>
                 );

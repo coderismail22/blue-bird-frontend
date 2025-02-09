@@ -334,8 +334,13 @@ const ViewExams = () => {
           <table className="w-full border border-gray-300 overflow-scroll">
             <thead className="bg-gray-100">
               <tr>
-              <th className="w-[15px] p-2 border text-center">SL</th>
-              <th className="p-2 border text-center">Name</th>
+                <th className="w-[15px] p-2 border text-center">SL</th>
+                <th className="p-2 border text-center">Name</th>
+                <th className="w-[15px] p-2 border text-center">Class</th>
+                <th className="w-[15px] p-2 border text-center">Version</th>
+                <th className="w-[15px] p-2 border text-center">Shift</th>
+                <th className="w-[15px] p-2 border text-center">Section</th>
+                <th className="w-[15px] p-2 border text-center">Group</th>
               </tr>
             </thead>
             <tbody>
@@ -344,6 +349,11 @@ const ViewExams = () => {
                   <tr key={index}>
                     <td className="p-2 border text-center">{index + 1}</td>
                     <td className="p-2 border text-center">{exam?.name}</td>
+                    <td className="p-2 border text-center">{exam?.class}</td>
+                    <td className="p-2 border text-center">{exam?.version}</td>
+                    <td className="p-2 border text-center">{exam?.shift}</td>
+                    <td className="p-2 border text-center">{exam?.section}</td>
+                    <td className="p-2 border text-center">{exam?.group}</td>
                   </tr>
                 );
               })}
