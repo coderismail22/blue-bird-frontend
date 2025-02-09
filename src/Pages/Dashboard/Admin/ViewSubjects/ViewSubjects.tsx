@@ -47,7 +47,6 @@ const ViewSubjects = () => {
   // State to store subjects, marks, and students
   const [subjects, setSubjects] = useState([]);
 
-
   // Fetch dropdown data dynamically
   useEffect(() => {
     axiosInstance
@@ -138,16 +137,12 @@ const ViewSubjects = () => {
     enabled: !!selectedExamId && !!selectedSubjectId,
   });
 
-
-
   const handleExamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const examId = event.target.value;
     setSelectedExamId(examId);
     const selectedExam = exams?.find((exam: any) => exam._id === examId);
     if (selectedExam) setSubjects(selectedExam.subjects);
   };
-
-
 
   return (
     <div className="mx-auto p-6 font-robotoCondensed mb-28">
@@ -321,7 +316,7 @@ const ViewSubjects = () => {
           <table className="w-full border border-gray-300 overflow-scroll">
             <thead className="bg-gray-100">
               <tr>
-                <th className="p-2 border text-center">SL</th>
+                <th className="w-[15px] p-2 border text-center">SL</th>
                 <th className="p-2 border text-center">Name</th>
               </tr>
             </thead>

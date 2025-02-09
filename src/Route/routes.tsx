@@ -34,7 +34,7 @@ import AddSubject from "@/Pages/Dashboard/Admin/Exam Management/AddSubject";
 import ExamRegistration from "@/Pages/Dashboard/Admin/Exam Management/ExamRegistration";
 import MarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/MarkEntry";
 import TeacherOnlyMarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/TeacherOnlyMarkEntry";
-import ExamRegisteredStudents from "@/Pages/Dashboard/Admin/Exam Management/ExamRegisteredStudents";
+import ExamRegisteredStudents from "@/Pages/Dashboard/Admin/Exam Management/ViewRegistrations";
 import ReadOnlyResults from "@/Pages/Results";
 import TeacherProfile from "@/Pages/Dashboard/Teacher/TeacherProfile/TeacherProfile";
 import StudentProfile from "@/Pages/Dashboard/Student/StudentProfile/StudentProfile";

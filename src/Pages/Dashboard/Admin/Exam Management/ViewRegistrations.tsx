@@ -5,10 +5,9 @@ import Swal from "sweetalert2";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { AxiosError } from "axios";
 import "../../../../styles/swal.css";
-import AppSelect from "@/components/CustomForm/AppSelect";
-import AppForm from "@/components/CustomForm/AppForm";
+import { Button } from "@/components/ui/button";
 
-const ExamRegistration = () => {
+const ViewRegistrations = () => {
   // Dropdown States
   const [years, setYears] = useState<string[]>([]);
   const [versions, setVersions] = useState<string[]>([]);
@@ -25,6 +24,8 @@ const ExamRegistration = () => {
   const [selectedSection, setSelectedSection] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedExamId, setSelectedExamId] = useState("");
+
+  const [examRegistrations, setExamRegistrations] = useState([]);
 
   // Fetch dropdown data dynamically
   useEffect(() => {
@@ -110,23 +111,32 @@ const ExamRegistration = () => {
     setSelectedExamId(event.target.value);
   };
 
-  // Fetch students when an exam is selected
-  const { data: students } = useQuery({
-    queryKey: ["students", filterParams],
-    queryFn: async () => {
+  // Fetch examRegistrations and show students when an exam is selected
+  // const { data: examRegistrations } = useQuery({
+  //   queryKey: ["exam-reg"],
+  //   queryFn: async () => {
+  //     const response = await axiosInstance.get(
+  //       `/exam-registrations?examId=${selectedExamId}`
+  //     );
+  //     console.log("got the registrations", response.data.data);
+  //     return response.data.data;
+  //   },
+  //   enabled: !!selectedExamId,
+  // });
+
+  // Fetch examRegistrations and show students when an exam is selected
+  const handleLoadRegistrations = async (selectedExamId: string) => {
+    try {
       const response = await axiosInstance.get(
-        `/students/filter?${filterParams}`
+        `/exam-registrations/${selectedExamId}`
       );
-      return response.data.data;
-    },
-    enabled: !!(
-      selectedYear &&
-      selectedVersion &&
-      selectedClass &&
-      selectedShift &&
-      selectedSection
-    ),
-  });
+      console.log("Registrations:", response.data.data); // Check `data.data`
+
+      setExamRegistrations(response.data.data);
+    } catch (error) {
+      console.log("Error fetching registrations:", error);
+    }
+  };
 
   // Register students API call
   const mutation = useMutation({
@@ -169,10 +179,11 @@ const ExamRegistration = () => {
     // Call the mutation with the payload
     mutation.mutate(payload);
   };
+
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center text-blue-500">
-        Exam Registration
+      <h1 className="underline underline-offset-8 text-2xl font-bold mb-6 text-center text-blue-500">
+        View Registered Students
       </h1>
 
       {/* Dropdowns */}
@@ -293,7 +304,7 @@ const ExamRegistration = () => {
         </div>
 
         {/* Group Selection (Only for Class 9-12) */}
-        {parseInt(selectedClass) >= 9 && (
+        {
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-1">
               Group:
@@ -311,7 +322,7 @@ const ExamRegistration = () => {
               ))}
             </select>
           </div>
-        )}
+        }
 
         {/* Exam Selection */}
         <div>
@@ -334,37 +345,50 @@ const ExamRegistration = () => {
         </div>
       </div>
 
-      {/* Form */}
-      <div>
-        <AppForm
-          onSubmit={onSubmit}
-          buttonText="Register"
-          defaultValues={{ students: [] }}
+      <div className="flex items-center justify-center">
+        <Button
+          className="bg-gradient-to-tr from-[#6a82fb] to-[#fc5c7d]  hover:from-[#fc5c7d] hover:to-[#6a82fb]"
+          disabled={!selectedShift}
+          onClick={() => handleLoadRegistrations(selectedExamId)}
         >
-          {/* Student Multi-Select Dropdown */}
-          {selectedExamId && (
-            <div>
-              <label className="block font-medium text-gray-700 mb-2">
-                Select Students:
-              </label>
-              <AppSelect
-                name="students"
-                label="Students"
-                placeholder="Select students"
-                isMulti={true}
-                options={students?.map(
-                  (student: { _id: string; roll: string; name: string }) => ({
-                    value: student._id,
-                    label: `${student?.roll} | ${student.name}`,
-                  })
-                )}
-              />
-            </div>
-          )}
-        </AppForm>
+          Load Registrations
+        </Button>
       </div>
+
+      {/* Table for displaying registered students */}
+      {examRegistrations && (
+        <div className="mt-10 overflow-x-auto">
+          <h1 className="text-center my-5 font-semibold underline underline-offset-4">
+            Registered Student List
+          </h1>
+          <table className="w-full border border-gray-300 overflow-scroll">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="w-[15px] p-2 border text-center">SL</th>
+                <th className="w-[15px] p-2 border text-center">Roll</th>
+                <th className="p-2 border text-center">Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {examRegistrations.map((examRegistration, index) => {
+                return (
+                  <tr key={index}>
+                    <td className="p-2 border text-center">{index + 1}</td>
+                    <td className="p-2 border text-center">
+                      {examRegistration?.studentId?.roll}
+                    </td>
+                    <td className="p-2 border text-center">
+                      {examRegistration?.studentId?.name}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ExamRegistration;
+export default ViewRegistrations;

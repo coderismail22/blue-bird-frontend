@@ -334,8 +334,8 @@ const ViewExams = () => {
           <table className="w-full border border-gray-300 overflow-scroll">
             <thead className="bg-gray-100">
               <tr>
-                <th className="p-2 border text-center">SL</th>
-                <th className="p-2 border text-center">Name</th>
+              <th className="w-[15px] p-2 border text-center">SL</th>
+              <th className="p-2 border text-center">Name</th>
               </tr>
             </thead>
             <tbody>
