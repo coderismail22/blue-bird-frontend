@@ -13,6 +13,7 @@ import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import AppYearPicker from "@/components/CustomForm/AppYearPicker";
+import AppDatePicker from "@/components/CustomForm/AppDatePicker";
 
 // ✅ Fetch student by ID
 const fetchStudentById = async (studentId: string) => {
@@ -25,21 +26,25 @@ const updateStudent = async (
   studentId: string,
   data: {
     name: string;
-    studentId: string;
-    roll: string;
+    dob: string;
     profileImg: string;
-    email: string;
-    password: string;
-    phone: string;
-    guardianName: string;
-    address: string;
+    birthRegId: string;
     bloodGroup: string;
-    year: string;
-    version: string;
-    shift: string;
+    gender: string;
+    phone: string;
+    email: string;
+    address: string;
     class: string;
     section: string;
     group: string;
+    year: string;
+    version: string;
+    shift: string;
+    roll: string;
+    fatherName: string;
+    fatherPhone: string;
+    motherName: string;
+    motherPhone: string;
   }
 ) => {
   const response = await axiosInstance.patch(
@@ -70,21 +75,25 @@ const EditStudent = () => {
   const mutation = useMutation({
     mutationFn: (data: {
       name: string;
-      studentId: string;
+      dob: string;
       profileImg: string;
-      roll: string;
-      email: string;
-      password: string;
-      phone: string;
-      guardianName: string;
-      address: string;
+      birthRegId: string;
       bloodGroup: string;
-      year: string;
-      version: string;
-      shift: string;
+      gender: string;
+      phone: string;
+      email: string;
+      address: string;
       class: string;
       section: string;
       group: string;
+      year: string;
+      version: string;
+      shift: string;
+      roll: string;
+      fatherName: string;
+      fatherPhone: string;
+      motherName: string;
+      motherPhone: string;
     }) => updateStudent(studentId!, data),
     onSuccess: () => {
       Swal.fire("Success!", "Student updated successfully!", "success");
@@ -99,21 +108,24 @@ const EditStudent = () => {
 
   const onSubmit = (data: {
     name: string;
-    studentId: string;
-    roll: string;
-    profileImg: string;
-    email: string;
-    password: string;
-    phone: string;
-    guardianName: string;
-    address: string;
+    dob: string;
+    birthRegId: string;
     bloodGroup: string;
-    year: string;
-    version: string;
-    shift: string;
+    gender: string;
+    phone: string;
+    email: string;
+    address: string;
     class: string;
     section: string;
     group: string;
+    year: string;
+    version: string;
+    shift: string;
+    roll: string;
+    fatherName: string;
+    fatherPhone: string;
+    motherName: string;
+    motherPhone: string;
   }) => {
     const finalData = {
       ...data,
@@ -135,21 +147,25 @@ const EditStudent = () => {
         <AppForm
           onSubmit={onSubmit}
           defaultValues={{
-            name: student?.data?.name || "",
-            studentId: student?.data?.studentId || "",
-            roll: student?.data?.roll || "",
-            email: student?.data?.email || "",
-            password: student?.data?.password || "",
-            phone: student?.data?.phone || "",
-            guardianName: student?.data?.guardianName || "",
-            address: student?.data?.address || "",
-            bloodGroup: student?.data?.bloodGroup || "",
-            year: student?.data?.year || "",
-            version: student?.data?.version || "",
-            shift: student?.data?.shift || "",
-            class: student?.data?.class || "",
-            section: student?.data?.section || "",
-            group: student?.data?.group || "",
+            name: student?.data?.name,
+            dob: student?.data?.dob,
+            birthRegId: student?.data?.birthRegId,
+            bloodGroup: student?.data?.bloodGroup,
+            gender: student?.data?.gender,
+            phone: student?.data?.phone,
+            email: student?.data?.email,
+            address: student?.data?.address,
+            class: student?.data?.class,
+            section: student?.data?.section,
+            group: student?.data?.group,
+            year: student?.data?.year,
+            version: student?.data?.version,
+            shift: student?.data?.shift,
+            roll: student?.data?.roll,
+            fatherName: student?.data?.fatherName,
+            fatherPhone: student?.data?.fatherPhone,
+            motherName: student?.data?.motherName,
+            motherPhone: student?.data?.motherPhone,
           }}
           buttonText="Update Student"
         >
@@ -160,58 +176,28 @@ const EditStudent = () => {
             placeholder="Enter student name"
           />
 
-          {/* Student ID */}
-          <AppInput
-            name="studentId"
-            label="Student ID"
-            placeholder="Enter student ID"
-          />
-          {/* Roll */}
-          <AppInput
-            name="roll"
-            label="Class Roll"
-            placeholder="Enter student class roll"
-          />
-
           {/* Image Upload Section */}
           <div className="text-sm truncate my-4">
             <label className="block font-medium text-black ">
               Upload Profile Image
             </label>
             <ImageUpload setUploadedImageUrl={setProfileImg} />
+            {profileImg === "" && (
+              <p className="text-red-500 text-sm">Image is required</p>
+            )}
           </div>
 
-          {/* Email */}
-          <AppInput name="email" label="Email" placeholder="Enter email" />
-
-          {/* Password */}
-          <AppInputPassword
-            className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
-            name="password"
-            label="Password"
-            labelStyles="text-black"
-            placeholder="Enter new password"
+          {/* Date of Birth */}
+          <AppDatePicker
+            name="dob"
+            label="Date of Birth"
+            placeholder="Enter date of birth"
           />
-
-          {/* Phone */}
+          {/* Birth Registration Number */}
           <AppInput
-            name="phone"
-            label="Phone"
-            placeholder="Enter phone number"
-          />
-
-          {/* Guardian Name */}
-          <AppInput
-            name="guardianName"
-            label="Guardian Name"
-            placeholder="Enter guardian's name"
-          />
-
-          {/* Address */}
-          <AppInput
-            name="address"
-            label="Address"
-            placeholder="Enter address"
+            name="birthRegId"
+            label="Birth Registration Number"
+            placeholder="Enter birth registration number"
           />
 
           {/* Blood Group */}
@@ -231,31 +217,32 @@ const EditStudent = () => {
             ]}
           />
 
+          {/* Gender */}
+          <AppSelect
+            name="gender"
+            label="Gender"
+            placeholder="Select a gender"
+            options={[
+              {
+                value: "Male",
+                label: "Male",
+              },
+              {
+                value: "Female",
+                label: "Female",
+              },
+            ]}
+          />
+
+          {/* Phone */}
+          <AppInput
+            name="phone"
+            label="Phone"
+            placeholder="Enter phone number"
+          />
+
           {/* Year Picker */}
           <AppYearPicker name="year" label="Year" />
-
-          {/* Version */}
-          <AppSelect
-            name="version"
-            label="Version"
-            placeholder="Select a version"
-            options={[
-              { value: "Bangla", label: "Bangla" },
-              { value: "English", label: "English" },
-            ]}
-          />
-
-          {/* Shift */}
-          <AppSelect
-            name="shift"
-            label="Shift"
-            placeholder="Select a shift"
-            options={[
-              { value: "Morning", label: "Morning" },
-              { value: "Day", label: "Day" },
-              { value: "Evening", label: "Evening" },
-            ]}
-          />
 
           {/* Class */}
           <AppSelect
@@ -294,6 +281,81 @@ const EditStudent = () => {
               { value: "Commerce", label: "Commerce" },
               { value: "NA", label: "NA" },
             ]}
+          />
+
+          {/* Version*/}
+          <AppSelect
+            name="version"
+            label="Version"
+            placeholder="Select a version"
+            options={[
+              { value: "Bangla", label: "Bangla" },
+              { value: "English", label: "English" },
+            ]}
+          />
+
+          {/* Shift */}
+          <AppSelect
+            name="shift"
+            label="Shift"
+            placeholder="Select a shift"
+            options={[
+              { value: "Morning", label: "Morning" },
+              { value: "Day", label: "Day" },
+              { value: "Evening", label: "Evening" },
+            ]}
+          />
+
+          {/* Roll */}
+          <AppInput
+            name="roll"
+            label="Class Roll"
+            placeholder="Enter student class roll"
+          />
+
+          {/* Father's Name */}
+          <AppInput
+            name="fatherName"
+            label="Father's Name"
+            placeholder="Enter father's name"
+          />
+
+          {/* Father's Phone Number */}
+          <AppInput
+            name="fatherPhone"
+            label="Father's Phone Number"
+            placeholder="Enter father's phone number"
+          />
+
+          {/* Mother's Name */}
+          <AppInput
+            name="motherName"
+            label="Mother's Name"
+            placeholder="Enter mother's name"
+          />
+          {/* Mother's Phone Number */}
+          <AppInput
+            name="motherPhone"
+            label="Mother's Phone Number"
+            placeholder="Enter mother's phone number"
+          />
+          {/* Address */}
+          <AppInput
+            name="address"
+            label="Address"
+            placeholder="Enter Address"
+          />
+
+          {/* Email */}
+          <AppInput name="email" label="Email" placeholder="Enter email" />
+
+          {/* Password */}
+          <AppInputPassword
+            className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
+            name="password"
+            label="Password"
+            labelStyles="text-black"
+            placeholder="Enter your password"
           />
         </AppForm>
       )}

@@ -6,6 +6,7 @@ import axiosInstance from "@/api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { teacherColumns } from "./teacherColumns";
 import Loader from "@/components/Loader/Loader";
+import { handleAxiosError } from "@/utils/handleAxiosError";
 
 // Fetch teachers from the API
 const fetchTeachers = async () => {
@@ -15,7 +16,7 @@ const fetchTeachers = async () => {
 
 // Delete a teacher by ID
 const deleteTeacher = async (teacherId: string) => {
-  await axiosInstance.delete(`/teachers/${teacherId}`);
+  await axiosInstance.delete(`/users/delete-teacher/${teacherId}`);
 };
 
 const AllTeachers = () => {
@@ -35,8 +36,10 @@ const AllTeachers = () => {
       queryClient.invalidateQueries({ queryKey: ["teachers"] });
       Swal.fire("Deleted!", "Teacher deleted successfully!", "success");
     },
-    onError: () => {
-      Swal.fire("Error!", "Failed to delete teacher.", "error");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      console.log(error)
+      handleAxiosError(error, "Failed to delete teacher.");
     },
   });
 
@@ -47,7 +50,7 @@ const AllTeachers = () => {
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, delete teacher!",
     }).then((result) => {
       if (result.isConfirmed) {
         mutation.mutate(teacherId);
@@ -59,6 +62,7 @@ const AllTeachers = () => {
   const handleEdit = (teacherId: string) => {
     navigate(`/dashboard/admin/teacher-management/edit-teacher/${teacherId}`);
   };
+
   const handleTeacherFullInfo = (teacherId: string) => {
     navigate(
       `/dashboard/admin/teacher-management/full-teacher-info/${teacherId}`

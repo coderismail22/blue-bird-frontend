@@ -105,6 +105,7 @@ const EditTeacher = () => {
     const finalData = {
       ...data,
       profileImg: profileImg || teacher?.data?.profileImg,
+      teacherId: teacher?.data?.email,
     };
     mutation.mutate(finalData);
   };
