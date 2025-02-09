@@ -12,8 +12,16 @@ import { BiDotsVertical } from "react-icons/bi";
 import { FaRegEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { IoIosInformationCircleOutline } from "react-icons/io";
+import Swal from "sweetalert2";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+// Delete a teacher by ID
+const deleteStudent = async (studentId: string) => {
+  await axiosInstance.delete(`/users/delete-student/${studentId}`);
+};
 
 const StudentInfo = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [years, setYears] = useState<string[]>([]);
   const [versions, setVersions] = useState<string[]>([]);
@@ -143,6 +151,34 @@ const StudentInfo = () => {
   // Take to edit student page
   const handleEdit = (studentId: string) => {
     navigate(`/dashboard/admin/student-management/edit-student/${studentId}`);
+  };
+
+  // Delete student mutation
+  const mutation = useMutation({
+    mutationFn: deleteStudent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["students"] });
+      Swal.fire("Deleted!", "Student deleted successfully!", "success");
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      handleAxiosError(error, "Failed to delete student.");
+    },
+  });
+
+  // Handle student deletion
+  const handleDelete = (studentId: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete student!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutation.mutate(studentId);
+      }
+    });
   };
 
   return (
@@ -354,7 +390,7 @@ const StudentInfo = () => {
                             <p className="text-[12px]">Edit</p>
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                          // onClick={() => handleDelete(teacher._id)}
+                            onClick={() => handleDelete(student._id)}
                           >
                             <FaTrash className="text-red-500" />
                             <p className="text-[12px]">Delete</p>
