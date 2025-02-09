@@ -117,77 +117,91 @@ const EditTeacher = () => {
       <h1 className="text-2xl font-bold mb-6 text-center underline underline-offset-8 text-blue-500">
         Edit Teacher
       </h1>
-      <AppForm
-        onSubmit={onSubmit}
-        defaultValues={{
-          name: teacher?.data?.name || "",
-          dob: teacher?.data?.dob || "",
-          gender: teacher?.data?.gender || "",
-          designation: teacher?.data?.designation || "",
-          subject: teacher?.data?.subject || "",
-          email: teacher?.data?.email || "",
-          password: teacher?.data?.password || "",
-          address: teacher?.data?.address || "",
-          phone: teacher?.data?.phone || "",
-          bloodGroup: teacher?.data?.bloodGroup || "",
-        }}
-        buttonText="Update Teacher"
-      >
-        <AppInput
-          name="name"
-          label="Teacher Name"
-          placeholder="Enter teacher name"
-        />
-        <div className="text-sm truncate my-4">
-          <label className="block font-medium text-black">
-            Upload Cover Image
-          </label>
-          <ImageUpload setUploadedImageUrl={setProfileImg} />
-        </div>
-        <AppDatePicker
-          name="dob"
-          label="Date of Birth"
-          placeholder="Select a date"
-        />
-        <AppSelect
-          name="bloodGroup"
-          label="Blood Group"
-          placeholder="Select a blood group"
-          options={[
-            { value: "A+", label: "A+" },
-            { value: "A-", label: "A-" },
-            { value: "B+", label: "B+" },
-            { value: "B-", label: "B-" },
-            { value: "AB+", label: "AB+" },
-            { value: "AB-", label: "AB-" },
-            { value: "O+", label: "O+" },
-            { value: "O-", label: "O-" },
-          ]}
-        />
-        <AppSelect
-          name="gender"
-          label="Gender"
-          placeholder="Select gender"
-          options={[
-            { value: "Male", label: "Male" },
-            { value: "Female", label: "Female" },
-          ]}
-        />
-        <AppInput
-          name="designation"
-          label="Designation"
-          placeholder="Enter designation"
-        />
-        <AppInput name="subject" label="Subject" placeholder="Enter subject" />
-        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
-        <AppInput name="email" label="Email" placeholder="Enter email" />
-        <AppInputPassword
-          name="password"
-          label="Password"
-          placeholder="Enter new password"
-        />
-        <AppInput name="address" label="Address" placeholder="Enter address" />
-      </AppForm>
+      {teacher && (
+        <AppForm
+          onSubmit={onSubmit}
+          defaultValues={{
+            name: teacher?.data?.name || "",
+            dob: teacher?.data?.dob || "",
+            gender: teacher?.data?.gender || "",
+            designation: teacher?.data?.designation || "",
+            subject: teacher?.data?.subject || "",
+            email: teacher?.data?.email || "",
+            password: teacher?.data?.password || "",
+            address: teacher?.data?.address || "",
+            phone: teacher?.data?.phone || "",
+            bloodGroup: teacher?.data?.bloodGroup || "",
+          }}
+          buttonText="Update Teacher"
+        >
+          <AppInput
+            name="name"
+            label="Teacher Name"
+            placeholder="Enter teacher name"
+          />
+          <div className="text-sm truncate my-4">
+            <label className="block font-medium text-black">
+              Upload Cover Image
+            </label>
+            <ImageUpload setUploadedImageUrl={setProfileImg} />
+          </div>
+          <AppDatePicker
+            name="dob"
+            label="Date of Birth"
+            placeholder="Select a date"
+          />
+          <AppSelect
+            name="bloodGroup"
+            label="Blood Group"
+            placeholder="Select a blood group"
+            options={[
+              { value: "A+", label: "A+" },
+              { value: "A-", label: "A-" },
+              { value: "B+", label: "B+" },
+              { value: "B-", label: "B-" },
+              { value: "AB+", label: "AB+" },
+              { value: "AB-", label: "AB-" },
+              { value: "O+", label: "O+" },
+              { value: "O-", label: "O-" },
+            ]}
+          />
+          <AppSelect
+            name="gender"
+            label="Gender"
+            placeholder="Select gender"
+            options={[
+              { value: "Male", label: "Male" },
+              { value: "Female", label: "Female" },
+            ]}
+          />
+          <AppInput
+            name="designation"
+            label="Designation"
+            placeholder="Enter designation"
+          />
+          <AppInput
+            name="subject"
+            label="Subject"
+            placeholder="Enter subject"
+          />
+          <AppInput
+            name="phone"
+            label="Phone"
+            placeholder="Enter phone number"
+          />
+          <AppInput name="email" label="Email" placeholder="Enter email" />
+          <AppInputPassword
+            name="password"
+            label="Password"
+            placeholder="Enter new password"
+          />
+          <AppInput
+            name="address"
+            label="Address"
+            placeholder="Enter address"
+          />
+        </AppForm>
+      )}
     </div>
   );
 };
