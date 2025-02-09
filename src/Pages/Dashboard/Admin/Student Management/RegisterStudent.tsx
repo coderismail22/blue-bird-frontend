@@ -12,25 +12,31 @@ import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import AppYearPicker from "@/components/CustomForm/AppYearPicker";
-import "../../../../styles/swal.css"
+import "../../../../styles/swal.css";
+import AppDatePicker from "@/components/CustomForm/AppDatePicker";
 // Register student function
 const registerStudent = async (studentData: {
   name: string;
-  studentId: string; //birth
-  roll: string;
+  dob: string;
   profileImg: string;
-  email: string;
-  password: string;
-  phone: string;
-  guardianName: string;
-  address: string;
+  birthRegId: string;
   bloodGroup: string;
-  year: string;
-  version: string;
-  shift: string;
+  gender: string;
+  phone: string;
+  email: string;
+  address: string;
   class: string;
   section: string;
   group: string;
+  year: string;
+  version: string;
+  shift: string;
+  roll: string;
+  fatherName: string;
+  fatherPhone: string;
+  motherName: string;
+  motherPhone: string;
+  password: string;
 }) => {
   const response = await axiosInstance.post(
     "/users/register-student",
@@ -71,25 +77,30 @@ const RegisterStudent = () => {
 
   const onSubmit = (data: {
     name: string;
-    studentId: string;
-    roll: string;
-    profileImg: string;
-    email: string;
-    password: string;
-    phone: string;
-    guardianName: string;
-    address: string;
+    dob: string;
+    birthRegId: string;
     bloodGroup: string;
+    gender: string;
+    phone: string;
+    email: string;
+    address: string;
     year: string;
-    version: string;
-    shift: string;
     class: string;
     section: string;
     group: string;
+    version: string;
+    shift: string;
+    roll: string;
+    fatherName: string;
+    fatherPhone: string;
+    motherName: string;
+    motherPhone: string;
+    password: string;
   }) => {
     const finalData = {
       ...data,
       profileImg,
+      studentId: data?.birthRegId,
     };
 
     mutation.mutate(finalData);
@@ -105,13 +116,10 @@ const RegisterStudent = () => {
         onSubmit={onSubmit}
         defaultValues={{
           name: "",
-          studentId: "", // birth registration number as studentid
+          dob: "",
           roll: "",
-          email: "",
+          gender: "",
           password: "",
-          phone: "",
-          guardianName: "",
-          address: "",
           bloodGroup: "",
           year: "",
           version: "",
@@ -119,6 +127,13 @@ const RegisterStudent = () => {
           class: "",
           section: "",
           group: "",
+          phone: "",
+          email: "",
+          address: "",
+          fatherName: "",
+          fatherPhone: "",
+          motherName: "",
+          motherPhone: "",
         }}
         buttonText="Register Student"
       >
@@ -140,9 +155,12 @@ const RegisterStudent = () => {
           )}
         </div>
 
-        {/* Year Picker */}
-        <AppYearPicker name="year" label="Year" />
-
+        {/* Date of Birth */}
+        <AppDatePicker
+          name="dob"
+          label="Date of Birth"
+          placeholder="Enter date of birth"
+        />
         {/* Birth Registration Number */}
         <AppInput
           name="birthRegId"
@@ -184,11 +202,11 @@ const RegisterStudent = () => {
           ]}
         />
 
-        {/* Student ID */}
-        {/* Student ID Will Be His Birth Registration Number */}
-
         {/* Phone */}
         <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
+
+        {/* Year Picker */}
+        <AppYearPicker name="year" label="Year" />
 
         {/* Class */}
         <AppSelect

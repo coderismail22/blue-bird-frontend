@@ -266,9 +266,8 @@ const StudentInfo = () => {
             ))}
           </select>
         </div>
-
-        {/* Group Selection (Only for Class 9-12) */}
-        {parseInt(selectedClass) >= 9 && (
+        {/* Group Selection */}
+        {
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-1">
               Group:
@@ -286,7 +285,7 @@ const StudentInfo = () => {
               ))}
             </select>
           </div>
-        )}
+        }
       </div>
 
       {/* Load Students Button */}
@@ -321,7 +320,6 @@ const StudentInfo = () => {
             <tbody>
               {students.map((student) => (
                 <tr key={student.studentId} className="border hover:bg-gray-50">
-                  <td className="p-3 border truncate">{student._id}</td>
                   <td className="p-3 border">{student.studentId}</td>
                   <td className="p-3 border">{student.name}</td>
                   <td className="p-3 border">{student.class}</td>
