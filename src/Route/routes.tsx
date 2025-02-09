@@ -42,6 +42,7 @@ import ViewExams from "@/Pages/Dashboard/Admin/ViewExams/ViewExams";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import AllTeachers from "@/Pages/Dashboard/Admin/Teacher Management/AllTeachers";
 import EditTeacher from "@/Pages/Dashboard/Admin/Teacher Management/EditTeacher";
+import FullTeacherInfo from "@/Pages/Dashboard/Admin/Teacher Management/FullTeacherInfo";
 
 export const router = createBrowserRouter([
   {
@@ -131,6 +132,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/admin/teacher-management/create-teacher",
         element: <AddTeacher />,
+      },
+      {
+        path: "/dashboard/admin/teacher-management/full-teacher-info/:teacherId",
+        element: <FullTeacherInfo />,
       },
       {
         path: "/dashboard/admin/teacher-management/edit-teacher/:teacherId",

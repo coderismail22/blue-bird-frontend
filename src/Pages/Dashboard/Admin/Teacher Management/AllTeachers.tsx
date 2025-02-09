@@ -59,6 +59,11 @@ const AllTeachers = () => {
   const handleEdit = (teacherId: string) => {
     navigate(`/dashboard/admin/teacher-management/edit-teacher/${teacherId}`);
   };
+  const handleTeacherFullInfo = (teacherId: string) => {
+    navigate(
+      `/dashboard/admin/teacher-management/full-teacher-info/${teacherId}`
+    );
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -82,7 +87,11 @@ const AllTeachers = () => {
       {teachers && (
         <TeacherTable
           data={teachers}
-          columns={teacherColumns(handleEdit, handleDelete)}
+          columns={teacherColumns(
+            handleTeacherFullInfo,
+            handleEdit,
+            handleDelete
+          )}
         />
       )}
     </div>

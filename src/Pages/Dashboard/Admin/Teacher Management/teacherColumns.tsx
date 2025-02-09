@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BiDotsVertical } from "react-icons/bi";
 import { FaRegEdit, FaTrash } from "react-icons/fa";
+import { IoIosInformationCircleOutline } from "react-icons/io";
 
 export type TTeacher = {
   _id: string;
@@ -19,6 +20,7 @@ export type TTeacher = {
 };
 
 export const teacherColumns = (
+  handleFullTeacherDetails: (id: string) => void,
   handleEdit: (id: string) => void,
   handleDelete: (id: string) => void
 ): ColumnDef<TTeacher>[] => [
@@ -56,6 +58,12 @@ export const teacherColumns = (
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() => handleFullTeacherDetails(teacher._id)}
+            >
+              <IoIosInformationCircleOutline className="text-green-700" /> Full
+              Details
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleEdit(teacher._id)}>
               <FaRegEdit className="text-green-700" />
               <p className="text-[12px]">Edit</p>
