@@ -12,6 +12,7 @@ import Loader from "@/components/Loader/Loader";
 import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
+import AppDatePicker from "@/components/CustomForm/AppDatePicker";
 
 // Fetch teacher by ID
 const fetchTeacherById = async (teacherId: string) => {
@@ -24,13 +25,16 @@ const updateTeacher = async (
   teacherId: string,
   data: {
     name: string;
-    teacherId: string;
     profileImg: string;
+    teacherId: string;
+    dob: string;
+    gender: string;
+    designation: string;
+    subject: string;
     email: string;
     password: string;
     phone: string;
     bloodGroup: string;
-    salary: number;
     address: string;
   }
 ) => {
@@ -62,13 +66,16 @@ const EditTeacher = () => {
   const mutation = useMutation({
     mutationFn: (data: {
       name: string;
-      teacherId: string;
       profileImg: string;
+      teacherId: string;
+      dob: string;
+      gender: string;
+      designation: string;
+      subject: string;
       email: string;
       password: string;
       phone: string;
       bloodGroup: string;
-      salary: number;
       address: string;
     }) => updateTeacher(teacherId!, data),
     onSuccess: () => {
@@ -77,20 +84,22 @@ const EditTeacher = () => {
       navigate("/dashboard/admin/teacher-management/all-teachers");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
-      console.log(err);
       handleAxiosError(err, "Failed to update teacher");
     },
   });
 
   const onSubmit = (data: {
     name: string;
-    teacherId: string;
     profileImg: string;
+    teacherId: string;
+    dob: string;
+    gender: string;
+    designation: string;
+    subject: string;
     email: string;
     password: string;
     phone: string;
     bloodGroup: string;
-    salary: number;
     address: string;
   }) => {
     const finalData = {
@@ -112,57 +121,34 @@ const EditTeacher = () => {
         onSubmit={onSubmit}
         defaultValues={{
           name: teacher?.data?.name || "",
-          teacherId: teacher?.data?.teacherId || "",
+          dob: teacher?.data?.dob || "",
+          gender: teacher?.data?.gender || "",
+          designation: teacher?.data?.designation || "",
+          subject: teacher?.data?.subject || "",
           email: teacher?.data?.email || "",
           password: teacher?.data?.password || "",
           address: teacher?.data?.address || "",
-          salary: teacher?.data?.salary || 0,
           phone: teacher?.data?.phone || "",
           bloodGroup: teacher?.data?.bloodGroup || "",
         }}
         buttonText="Update Teacher"
       >
-        {/* Teacher Name */}
         <AppInput
           name="name"
           label="Teacher Name"
           placeholder="Enter teacher name"
         />
-
-        {/* Teacher ID */}
-        <AppInput
-          name="teacherId"
-          label="Teacher ID"
-          placeholder="Enter teacher ID"
-        />
-
-        {/* Image Upload Section */}
         <div className="text-sm truncate my-4">
-          <label className="block font-medium text-black ">
+          <label className="block font-medium text-black">
             Upload Cover Image
           </label>
           <ImageUpload setUploadedImageUrl={setProfileImg} />
         </div>
-
-        {/* Email */}
-        <AppInput name="email" label="Email" placeholder="Enter email" />
-
-        {/* Password */}
-        <AppInputPassword
-          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
-          name="password"
-          label="Password"
-          labelStyles="text-black"
-          placeholder="Enter new password"
+        <AppDatePicker
+          name="dob"
+          label="Date of Birth"
+          placeholder="Select a date"
         />
-
-        {/* Phone */}
-        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
-
-        {/* Address */}
-        <AppInput name="address" label="Address" placeholder="Enter Address" />
-
-        {/* Bloodgroup */}
         <AppSelect
           name="bloodGroup"
           label="Blood Group"
@@ -178,6 +164,29 @@ const EditTeacher = () => {
             { value: "O-", label: "O-" },
           ]}
         />
+        <AppSelect
+          name="gender"
+          label="Gender"
+          placeholder="Select gender"
+          options={[
+            { value: "Male", label: "Male" },
+            { value: "Female", label: "Female" },
+          ]}
+        />
+        <AppInput
+          name="designation"
+          label="Designation"
+          placeholder="Enter designation"
+        />
+        <AppInput name="subject" label="Subject" placeholder="Enter subject" />
+        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
+        <AppInput name="email" label="Email" placeholder="Enter email" />
+        <AppInputPassword
+          name="password"
+          label="Password"
+          placeholder="Enter new password"
+        />
+        <AppInput name="address" label="Address" placeholder="Enter address" />
       </AppForm>
     </div>
   );
