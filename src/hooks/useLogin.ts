@@ -65,7 +65,7 @@ export const useLogin = () => {
       queryClient.setQueryData(authKey, authState);
 
       // Fallback: Set the token in localStorage for persistence across sessions
-      // TOOD: This one is working not tanstack query neither persist
+      // TODO: This one is working not tanstack query neither persist
       localStorage.setItem("accessToken", data?.data?.accessToken);
 
       Swal.fire({
@@ -86,7 +86,6 @@ export const useLogin = () => {
     },
     onError: (error: AxiosError) => {
       handleAxiosError(error, "Login Failed");
-      navigate("/");
     },
   });
 };

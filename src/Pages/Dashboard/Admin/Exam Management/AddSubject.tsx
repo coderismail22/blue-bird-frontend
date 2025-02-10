@@ -11,12 +11,7 @@ import AppSelect from "@/components/CustomForm/AppSelect";
 import AppCheckbox from "@/components/CustomForm/AppCheckbox";
 import AppYearPicker from "@/components/CustomForm/AppYearPicker";
 import Loader from "@/components/Loader/Loader";
-
-const fetchTeachers = async () => {
-  const response = await axiosInstance.get("/teachers/");
-  return response?.data?.data;
-};
-const createSubject = async (subjectData: {
+interface ISubject {
   name: string;
   code: string;
   year: string;
@@ -35,7 +30,12 @@ const createSubject = async (subjectData: {
   plainMark: number;
   totalMark: number;
   subjectTeacher: string;
-}) => {
+}
+const fetchTeachers = async () => {
+  const response = await axiosInstance.get("/teachers/");
+  return response?.data?.data;
+};
+const createSubject = async (subjectData: ISubject) => {
   const response = await axiosInstance.post(
     "/subjects/create-subject",
     subjectData
@@ -71,18 +71,16 @@ const AddSubject = () => {
     queryFn: fetchTeachers,
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: ISubject) => {
     const mcqMark = Number(data.mcqMark);
     const cqMark = Number(data.cqMark);
     const practicalMark = Number(data.practicalMark);
-    const plainMark = Number(data.plainMark);
-    const totalMark = mcqMark + cqMark + practicalMark + plainMark;
+    const totalMark = mcqMark + cqMark + practicalMark;
     const finalData = {
       ...data,
       mcqMark,
       cqMark,
       practicalMark,
-      plainMark,
       totalMark,
     };
     mutation.mutate(finalData);
@@ -113,14 +111,12 @@ const AddSubject = () => {
           shift: "Morning",
           section: "",
           group: "",
-          hasPlainMark: false,
-          hasMCQ: true,
-          hasCQ: true,
+          hasMCQ: false,
+          hasCQ: false,
           hasPractical: false,
           mcqMark: 0,
           cqMark: 0,
           practicalMark: 0,
-          plainMark: 0,
           totalMark: 0,
           subjectTeacher: "",
         }}
@@ -152,10 +148,18 @@ const AddSubject = () => {
           label="Class"
           placeholder="Select a class"
           options={[
+            { value: "1", label: "One" },
+            { value: "2", label: "Two" },
+            { value: "3", label: "Three" },
+            { value: "4", label: "Four" },
+            { value: "5", label: "Five" },
+            { value: "6", label: "Six" },
             { value: "7", label: "Seven" },
             { value: "8", label: "Eight" },
             { value: "9", label: "Nine" },
             { value: "10", label: "Ten" },
+            { value: "11", label: "Eleven" },
+            { value: "12", label: "Twelve" },
           ]}
         />
         <AppSelect
@@ -176,6 +180,9 @@ const AddSubject = () => {
             { value: "A", label: "A" },
             { value: "B", label: "B" },
             { value: "C", label: "C" },
+            { value: "D", label: "D" },
+            { value: "E", label: "E" },
+            { value: "F", label: "F" },
           ]}
         />
         <AppSelect
@@ -189,8 +196,7 @@ const AddSubject = () => {
             { value: "NA", label: "NA" },
           ]}
         />
-        <div className="my-5 grid grid-cols-2 sm:grid-cols-4 gap-5 items-center justify-center">
-          <AppCheckbox name="hasPlainMark" label="Has Plain Mark?" />
+        <div className="my-5 grid grid-cols-3  gap-5 items-center justify-center">
           <AppCheckbox name="hasMCQ" label="Has MCQ?" />
           <AppCheckbox name="hasCQ" label="Has CQ?" />
           <AppCheckbox name="hasPractical" label="Has Practical?" />
@@ -206,11 +212,7 @@ const AddSubject = () => {
           label="Practical Mark"
           placeholder="Enter practical mark"
         />
-        <AppInput
-          name="plainMark"
-          label="Plain Mark"
-          placeholder="Enter plain mark"
-        />
+
         {/* Teacher */}
         <AppSelect
           name="subjectTeacher"

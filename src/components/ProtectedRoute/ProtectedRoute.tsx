@@ -1,6 +1,7 @@
 import { authKey } from "@/api/authKey";
 import { useQueryClient } from "@tanstack/react-query";
 import { Navigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -10,12 +11,28 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     role: string;
   }>(authKey);
 
-  // Redirect to login if accessToken doesn't exist
-  if (!authData?.accessToken || !authData?.role) {
-    return (
-      <Navigate to="/auth/login" state={{ from: location.pathname }} replace />
-    );
+  // Test 1
+  if (!authData?.accessToken) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No valid auth data found.",
+    });
   }
+  // Test 2
+  if (!authData?.role) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No role found.",
+    });
+  }
+  // Redirect to login if accessToken doesn't exist
+  // if (!authData?.accessToken || !authData?.role) {
+  //   return (
+  //     <Navigate to="/auth/login" state={{ from: location.pathname }} replace />
+  //   );
+  // }
 
   return <>{children}</>;
 };

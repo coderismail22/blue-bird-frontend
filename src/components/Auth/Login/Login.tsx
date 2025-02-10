@@ -66,12 +66,6 @@ const Login = () => {
             placeholder="Enter your password"
           />
         </AppForm>
-        {/* <div className="text-sm flex gap-1 mt-4 items-center justify-center text-gray-400">
-          <p>Don't have an account?</p>
-          <Link to="/auth/signup" className="text-blue-400 hover:underline">
-            Sign up
-          </Link>
-        </div> */}
       </div>
     </div>
   );

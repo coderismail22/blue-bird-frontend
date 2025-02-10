@@ -29,13 +29,13 @@ const AppDashboard = () => {
   // TODO: Add static role type instead of current void
   const role = useRole();
   // While redirecting, role will be undefined, so render nothing
-  if (!role) {
-    navigate("/auth/login");
-    return null; // Prevent further rendering while redirecting
-  }
-  if (!authData) {
-    <Loader />; // Wait until authKey is set
-  }
+  // if (!role) {
+  //   navigate("/auth/logins");
+  //   return null; // Prevent further rendering while redirecting
+  // }
+  // if (!authData) {
+  //   <Loader />; // Wait until authKey is set
+  // }
 
   return (
     <SidebarProvider className="font-robotoCondensed">
