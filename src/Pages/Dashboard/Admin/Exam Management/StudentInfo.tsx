@@ -12,16 +12,8 @@ import { BiDotsVertical } from "react-icons/bi";
 import { FaRegEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { IoIosInformationCircleOutline } from "react-icons/io";
-import Swal from "sweetalert2";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-// Delete a teacher by ID
-const deleteStudent = async (studentId: string) => {
-  await axiosInstance.delete(`/users/delete-student/${studentId}`);
-};
 
 const StudentInfo = () => {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [years, setYears] = useState<string[]>([]);
   const [versions, setVersions] = useState<string[]>([]);
@@ -153,40 +145,12 @@ const StudentInfo = () => {
     navigate(`/dashboard/admin/student-management/edit-student/${studentId}`);
   };
 
-  // Delete student mutation
-  const mutation = useMutation({
-    mutationFn: deleteStudent,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["students"] });
-      Swal.fire("Deleted!", "Student deleted successfully!", "success");
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any) => {
-      handleAxiosError(error, "Failed to delete student.");
-    },
-  });
-
-  // Handle student deletion
-  const handleDelete = (studentId: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete student!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        mutation.mutate(studentId);
-      }
-    });
-  };
-
   return (
     <div className="p-8 bg-white rounded-lg shadow-lg max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-600 underline underline-offset-8">
         Student Information
       </h1>
-      {/* Dropdowns */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Year Selection */}
         <div>
@@ -302,7 +266,6 @@ const StudentInfo = () => {
             ))}
           </select>
         </div>
-
         {/* Group Selection */}
         {
           <div>
@@ -337,74 +300,66 @@ const StudentInfo = () => {
       </div>
 
       {/* Display Students */}
-      {students && (
-        <div className="mt-10">
-          <h2 className="text-center underline underline-offset-4 text-lg font-semibold text-gray-700">
-            Student List
-          </h2>
-          {students.length === 0 ? (
-            <p className="text-gray-500 mt-2 text-center">No students found.</p>
-          ) : (
-            <table className="w-full mt-4 border border-gray-300 text-left rounded-md">
-              <thead>
-                <tr className="bg-blue-100">
-                  <th className="p-3 border">Student ID</th>
-                  <th className="p-3 border">Roll</th>
-                  <th className="p-3 border">Name</th>
-                  <th className="p-3 border">Class</th>
-                  <th className="p-3 border">Shift</th>
-                  <th className="p-3 border">Section</th>
-                  <th className="p-3 border">Actions</th>
+      <div className="mt-10">
+        <h2 className="text-lg font-semibold text-gray-700">Student List</h2>
+        {students.length === 0 ? (
+          <p className="text-gray-500 mt-2 text-center">No students found.</p>
+        ) : (
+          <table className="w-full mt-4 border border-gray-300 text-left rounded-md">
+            <thead>
+              <tr className="bg-blue-100">
+                <th className="p-3 border">ID</th>
+                <th className="p-3 border">Roll</th>
+                <th className="p-3 border">Name</th>
+                <th className="p-3 border">Class</th>
+                <th className="p-3 border">Shift</th>
+                <th className="p-3 border">Section</th>
+                <th className="p-3 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <tr key={student.studentId} className="border hover:bg-gray-50">
+                  <td className="p-3 border">{student.studentId}</td>
+                  <td className="p-3 border">{student.name}</td>
+                  <td className="p-3 border">{student.class}</td>
+                  <td className="p-3 border">{student.shift}</td>
+                  <td className="p-3 border">{student.section}</td>
+                  <td>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-5 w-5">
+                          <BiDotsVertical className="h-10 w-10" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onClick={() => handleFullStudentInfo(student._id)}
+                        >
+                          <IoIosInformationCircleOutline className="text-green-700" />
+                          <p className="text-[12px]">Full Info</p>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleEdit(student._id)}
+                        >
+                          <FaRegEdit className="text-green-700" />
+                          <p className="text-[12px]">Edit</p>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                        // onClick={() => handleDelete(teacher._id)}
+                        >
+                          <FaTrash className="text-red-500" />
+                          <p className="text-[12px]">Delete</p>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {students.map((student) => (
-                  <tr
-                    key={student.studentId}
-                    className="border hover:bg-gray-50"
-                  >
-                    <td className="p-3 border">{student.studentId}</td>
-                    <td className="p-3 border">{student.roll || "NA"}</td>
-                    <td className="p-3 border">{student.name}</td>
-                    <td className="p-3 border">{student.class}</td>
-                    <td className="p-3 border">{student.shift}</td>
-                    <td className="p-3 border">{student.section}</td>
-                    <td>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-5 w-5">
-                            <BiDotsVertical className="h-10 w-10" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem
-                            onClick={() => handleFullStudentInfo(student._id)}
-                          >
-                            <IoIosInformationCircleOutline className="text-green-700" />
-                            <p className="text-[12px]">Full Info</p>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleEdit(student._id)}
-                          >
-                            <FaRegEdit className="text-green-700" />
-                            <p className="text-[12px]">Edit</p>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(student._id)}
-                          >
-                            <FaTrash className="text-red-500" />
-                            <p className="text-[12px]">Delete</p>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };

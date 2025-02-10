@@ -2,26 +2,30 @@ import {
   FaBook,
   FaBookReader,
   FaCartArrowDown,
-  // FaCartArrowDown,
   FaChalkboardTeacher,
   FaHome,
   FaRegListAlt,
-  FaUserGraduate,
 } from "react-icons/fa";
 import { CiBoxList } from "react-icons/ci";
 
-import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline, IoMdSearch } from "react-icons/io";
 
 import {
-  MdDownloading,
+  MdEditDocument,
   MdEmojiEvents,
   MdEventNote,
-  MdOutlinePlayLesson,
+  MdOutlineNoteAlt,
 } from "react-icons/md";
 import { BiCategory } from "react-icons/bi";
-import { FaMoneyCheckDollar, FaPeopleRoof } from "react-icons/fa6";
+import {
+  FaMoneyCheckDollar,
+  FaPeopleGroup,
+  FaPeopleRoof,
+} from "react-icons/fa6";
 import { PiStudentFill } from "react-icons/pi";
 import { HiLightBulb } from "react-icons/hi";
+import { GiArchiveRegister } from "react-icons/gi";
+import { BsClipboardDataFill } from "react-icons/bs";
 
 export const sidebarData = {
   superAdmin: [
@@ -141,11 +145,11 @@ export const sidebarData = {
     },
   ],
   admin: [
-    // { label: "Home", path: "/dashboard/admin/home", icon: FaHome },
+    { label: "Home", path: "/dashboard/admin/profile", icon: FaHome },
     {
       label: "Notice Banner",
       path: "/dashboard/admin/banner-notice",
-      icon: HiLightBulb ,
+      icon: HiLightBulb,
     },
     {
       label: "Publish Notice",
@@ -184,38 +188,88 @@ export const sidebarData = {
         },
         {
           icon: FaRegListAlt,
-          label: "Students",
+          label: "All Students",
           path: "/dashboard/admin/student-management/student-info-page",
         },
       ],
     },
     {
-      label: "Administration ",
-      path: "/dashboard/admin/administration",
-      icon: FaPeopleRoof,
-    },
-  ],
-  instructor: [
-    { label: "Home", path: "/dashboard/instructor/home", icon: FaHome },
-  ],
-  student: [
-    { label: "Home", path: "/dashboard/student/home", icon: FaHome },
-    // { label: "Cart", path: "/dashboard/student/cart", icon: FaCartArrowDown },
-    {
-      label: "Courses",
-      icon: FaUserGraduate,
+      icon: MdEditDocument,
+      label: "Exam Management",
       children: [
         {
-          icon: MdOutlinePlayLesson,
-          label: "Enrolled Courses",
-          path: "/dashboard/student/courses/enrolled-courses",
+          icon: IoMdAddCircleOutline,
+          label: "Add Subject",
+          path: "/dashboard/admin/exam-management/add-subject",
         },
         {
-          icon: MdDownloading,
-          label: "Pending Courses",
-          path: "/dashboard/student/courses/pending-courses",
+          icon: FaRegListAlt,
+          label: "View Subjects",
+          path: "/dashboard/admin/exam-management/view-subjects",
+        },
+        {
+          icon: IoMdAddCircleOutline,
+          label: "Add Exam",
+          path: "/dashboard/admin/exam-management/add-exam",
+        },
+        {
+          icon: FaRegListAlt,
+          label: "View Exams",
+          path: "/dashboard/admin/exam-management/view-exams",
+        },
+        {
+          icon: GiArchiveRegister,
+          label: "Exam Registration",
+          path: "/dashboard/admin/exam-management/exam-registration",
+        },
+        {
+          icon: FaRegListAlt,
+          label: "View Registration",
+          path: "/dashboard/admin/exam-management/exam-registered-students",
+        },
+        {
+          icon: MdOutlineNoteAlt,
+          label: "Mark Entry",
+          path: "/dashboard/teacher/mark-entry",
+        },
+        {
+          icon: BsClipboardDataFill,
+          label: "Exam Results ",
+          path: "/dashboard/admin/exam-management/view-exam-results",
         },
       ],
     },
+    {
+      icon: FaPeopleRoof,
+      label: "Administration ",
+      path: "/dashboard/admin/administration",
+    },
+  ],
+  teacher: [
+    { label: "Home", path: "/dashboard/teacher/profile", icon: FaHome },
+    {
+      icon: FaPeopleGroup,
+      label: "Attendance",
+      path: "/dashboard/admin/attendance-management/take-attendance",
+    },
+    {
+      icon: MdOutlineNoteAlt,
+      label: "Mark Entry",
+      path: "/dashboard/teacher/teacher-only-mark-entry",
+    },
+    {
+      icon: IoMdSearch,
+      label: "See Results",
+      path: "/dashboard/see-student-results",
+    },
+  ],
+  student: [
+    { label: "Home", path: "/dashboard/student/profile", icon: FaHome },
+    {
+      icon: BsClipboardDataFill,
+      label: "Exam Result ",
+      path: "/dashboard/student/exam-result",
+    },
+    // Upcoming Features: Routine, Notice, Events
   ],
 };

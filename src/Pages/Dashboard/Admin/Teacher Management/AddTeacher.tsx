@@ -11,17 +11,21 @@ import AppInputPassword from "@/components/CustomForm/AppInputPassword";
 import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
+import AppDatePicker from "@/components/CustomForm/AppDatePicker";
 
 // Create teacher function
 const createTeacher = async (teacherData: {
   name: string;
-  teacherId: string;
   profileImg: string;
+  teacherId: string;
+  dob: string;
+  gender: string;
+  designation: string;
+  subject: string;
   email: string;
   password: string;
   phone: string;
   bloodGroup: string;
-  salary: number;
   address: string;
 }) => {
   const response = await axiosInstance.post(
@@ -36,7 +40,7 @@ const AddTeacher = () => {
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
- 
+
   // Mutation for creating a teacher
   const mutation = useMutation({
     mutationFn: createTeacher,
@@ -46,26 +50,28 @@ const AddTeacher = () => {
       navigate("/dashboard/admin/teacher-management/all-teachers");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
-      console.log(err);
       handleAxiosError(err, "Failed to add teacher");
-      // Swal.fire("Error!", "Failed to add teacher. Please try again.", "error");
     },
   });
 
   const onSubmit = (data: {
     name: string;
-    teacherId: string;
     profileImg: string;
+    teacherId: string;
+    dob: string;
+    gender: string;
+    designation: string;
+    subject: string;
     email: string;
     password: string;
     phone: string;
     bloodGroup: string;
-    salary: number;
     address: string;
   }) => {
     const finalData = {
       ...data,
       profileImg,
+      teacherId: data?.email,
     };
 
     mutation.mutate(finalData);
@@ -81,11 +87,13 @@ const AddTeacher = () => {
         onSubmit={onSubmit}
         defaultValues={{
           name: "",
-          teacherId: "",
+          dob: "",
+          gender: "",
+          designation: "",
+          subject: "",
           email: "",
           password: "",
           address: "",
-          salary: 0,
           phone: "",
           bloodGroup: "",
         }}
@@ -96,13 +104,6 @@ const AddTeacher = () => {
           name="name"
           label="Teacher Name"
           placeholder="Enter teacher name"
-        />
-
-        {/* Teacher ID */}
-        <AppInput
-          name="teacherId"
-          label="Teacher ID"
-          placeholder="Enter teacher ID"
         />
 
         {/* Image Upload Section */}
@@ -116,24 +117,14 @@ const AddTeacher = () => {
           )}
         </div>
 
-        {/* Email */}
-        <AppInput name="email" label="Email" placeholder="Enter email" />
-
-        {/* Password */}
-        <AppInputPassword
-          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
-          name="password"
-          label="Password"
-          labelStyles="text-black"
-          placeholder="Enter your password"
+        {/* DOB */}
+        <AppDatePicker
+          name="dob"
+          label="Date of Birth"
+          placeholder="Select a date"
         />
-        {/* Phone */}
-        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
-        {/* Salary */}
-        <AppInput name="salary" label="Salary" placeholder="Enter salary" />
-        {/* Address */}
-        <AppInput name="address" label="Address" placeholder="Enter Address" />
-        {/* Bloodgroup */}
+
+        {/* Blood Group */}
         <AppSelect
           name="bloodGroup"
           label="Blood Group"
@@ -173,6 +164,69 @@ const AddTeacher = () => {
             },
           ]}
         />
+
+        {/* Gender */}
+        <AppSelect
+          name="gender"
+          label="Gender"
+          placeholder="Select a gender"
+          options={[
+            {
+              value: "Male",
+              label: "Male",
+            },
+            {
+              value: "Female",
+              label: "Female",
+            },
+          ]}
+        />
+
+        {/* Designation */}
+        <AppSelect
+          name="designation"
+          label="Designation"
+          placeholder="Select a designation"
+          options={[
+            {
+              value: "Lecturer",
+              label: "Lecturer",
+            },
+            {
+              value: "Assistant Teacher",
+              label: "Assistant Teacher",
+            },
+          ]}
+        />
+
+        {/* Subject */}
+        <AppInput
+          name="subject"
+          label="Subject"
+          placeholder="Enter subject name"
+        />
+
+        {/* Phone */}
+        <AppInput
+          name="phone"
+          label="Phone Number"
+          placeholder="Enter phone number"
+        />
+
+        {/* Email */}
+        <AppInput name="email" label="Email" placeholder="Enter email" />
+
+        {/* Password */}
+        <AppInputPassword
+          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
+          name="password"
+          label="Password"
+          labelStyles="text-black"
+          placeholder="Enter your password"
+        />
+
+        {/* Address */}
+        <AppInput name="address" label="Address" placeholder="Enter Address" />
       </AppForm>
     </div>
   );

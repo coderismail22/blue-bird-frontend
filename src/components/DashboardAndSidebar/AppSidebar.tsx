@@ -22,7 +22,7 @@ export const AppSidebar = ({
 }: { role: Role } & React.ComponentProps<typeof Sidebar>) => {
   return (
     <Sidebar {...props} collapsible="icon">
-      <SidebarContent className="bg-gradient-to-b from-blue-500 to-indigo-400 text-white">
+      <SidebarContent className="bg-gradient-to-b from-blue-500 to-cyan-600 text-white">
         <SidebarGroup>
           <SidebarGroupLabel className="text-white">
             Navigation

@@ -11,22 +11,35 @@ import AppInputPassword from "@/components/CustomForm/AppInputPassword";
 import { AxiosError } from "axios";
 import { BackendErrorResponse } from "@/types/backendErrorResponse.type";
 import { handleAxiosError } from "@/utils/handleAxiosError";
-
+import AppYearPicker from "@/components/CustomForm/AppYearPicker";
+import "../../../../styles/swal.css";
+import AppDatePicker from "@/components/CustomForm/AppDatePicker";
 // Register student function
 const registerStudent = async (studentData: {
   name: string;
-  studentId: string;
+  dob: string;
   profileImg: string;
-  email: string;
-  password: string;
-  phone: string;
-  guardianName: string;
-  address: string;
+  birthRegId: string;
   bloodGroup: string;
-  grade: string;
+  gender: string;
+  phone: string;
+  email: string;
+  address: string;
+  class: string;
+  section: string;
+  group: string;
+  year: string;
+  version: string;
+  shift: string;
+  roll: string;
+  fatherName: string;
+  fatherPhone: string;
+  motherName: string;
+  motherPhone: string;
+  password: string;
 }) => {
   const response = await axiosInstance.post(
-    "/students/register",
+    "/users/register-student",
     studentData
   );
   return response.data;
@@ -42,9 +55,19 @@ const RegisterStudent = () => {
   const mutation = useMutation({
     mutationFn: registerStudent,
     onSuccess: () => {
-      Swal.fire("Success!", "Student registered successfully!", "success");
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Student registered successfully!",
+        customClass: {
+          title: "custom-title",
+          popup: "custom-popup",
+          icon: "custom-icon",
+          confirmButton: "custom-confirm-btn",
+        },
+      });
       queryClient.invalidateQueries({ queryKey: ["students"] });
-      navigate("/dashboard/admin/student-management/all-students");
+      navigate("/dashboard/admin/student-management/register-student");
     },
     onError: (err: AxiosError<BackendErrorResponse>) => {
       console.log(err);
@@ -54,22 +77,34 @@ const RegisterStudent = () => {
 
   const onSubmit = (data: {
     name: string;
-    studentId: string;
-    profileImg: string;
-    email: string;
-    password: string;
-    phone: string;
-    guardianName: string;
-    address: string;
+    dob: string;
+    birthRegId: string;
     bloodGroup: string;
-    grade: string;
+    gender: string;
+    phone: string;
+    email: string;
+    address: string;
+    year: string;
+    class: string;
+    section: string;
+    group: string;
+    version: string;
+    shift: string;
+    roll: string;
+    fatherName: string;
+    fatherPhone: string;
+    motherName: string;
+    motherPhone: string;
+    password: string;
   }) => {
     const finalData = {
       ...data,
       profileImg,
+      studentId: data?.birthRegId,
     };
 
     mutation.mutate(finalData);
+    // console.log(finalData);
   };
 
   return (
@@ -81,14 +116,24 @@ const RegisterStudent = () => {
         onSubmit={onSubmit}
         defaultValues={{
           name: "",
-          studentId: "",
-          email: "",
+          dob: "",
+          roll: "",
+          gender: "",
           password: "",
-          phone: "",
-          guardianName: "",
-          address: "",
           bloodGroup: "",
-          grade: "",
+          year: "",
+          version: "",
+          shift: "",
+          class: "",
+          section: "",
+          group: "",
+          phone: "",
+          email: "",
+          address: "",
+          fatherName: "",
+          fatherPhone: "",
+          motherName: "",
+          motherPhone: "",
         }}
         buttonText="Register Student"
       >
@@ -97,13 +142,6 @@ const RegisterStudent = () => {
           name="name"
           label="Student Name"
           placeholder="Enter student name"
-        />
-
-        {/* Student ID */}
-        <AppInput
-          name="studentId"
-          label="Student ID"
-          placeholder="Enter student ID"
         />
 
         {/* Image Upload Section */}
@@ -117,37 +155,17 @@ const RegisterStudent = () => {
           )}
         </div>
 
-        {/* Email */}
-        <AppInput name="email" label="Email" placeholder="Enter email" />
-
-        {/* Password */}
-        <AppInputPassword
-          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
-          name="password"
-          label="Password"
-          labelStyles="text-black"
-          placeholder="Enter your password"
+        {/* Date of Birth */}
+        <AppDatePicker
+          name="dob"
+          label="Date of Birth"
+          placeholder="Enter date of birth"
         />
-
-        {/* Phone */}
+        {/* Birth Registration Number */}
         <AppInput
-          name="phone"
-          label="Phone"
-          placeholder="Enter phone number"
-        />
-
-        {/* Guardian Name */}
-        <AppInput
-          name="guardianName"
-          label="Guardian Name"
-          placeholder="Enter guardian's name"
-        />
-
-        {/* Address */}
-        <AppInput
-          name="address"
-          label="Address"
-          placeholder="Enter address"
+          name="birthRegId"
+          label="Birth Registration Number"
+          placeholder="Enter birth registration number"
         />
 
         {/* Blood Group */}
@@ -167,11 +185,137 @@ const RegisterStudent = () => {
           ]}
         />
 
-        {/* Grade */}
+        {/* Gender */}
+        <AppSelect
+          name="gender"
+          label="Gender"
+          placeholder="Select a gender"
+          options={[
+            {
+              value: "Male",
+              label: "Male",
+            },
+            {
+              value: "Female",
+              label: "Female",
+            },
+          ]}
+        />
+
+        {/* Phone */}
+        <AppInput name="phone" label="Phone" placeholder="Enter phone number" />
+
+        {/* Year Picker */}
+        <AppYearPicker name="year" label="Year" />
+
+        {/* Class */}
+        <AppSelect
+          name="class"
+          label="Class"
+          placeholder="Select a class"
+          options={[
+            { value: "7", label: "Seven" },
+            { value: "8", label: "Eight" },
+            { value: "9", label: "Nine" },
+            { value: "10", label: "Ten" },
+          ]}
+        />
+
+        {/* Section */}
+        <AppSelect
+          name="section"
+          label="Section"
+          placeholder="Select a section"
+          options={[
+            { value: "A", label: "A" },
+            { value: "B", label: "B" },
+            { value: "C", label: "C" },
+            { value: "D", label: "D" },
+          ]}
+        />
+
+        {/* Group (Optional) */}
+        <AppSelect
+          name="group"
+          label="Group (If Applicable)"
+          placeholder="Select a group"
+          options={[
+            { value: "Science", label: "Science" },
+            { value: "Arts", label: "Arts" },
+            { value: "Commerce", label: "Commerce" },
+            { value: "NA", label: "NA" },
+          ]}
+        />
+
+        {/* Version*/}
+        <AppSelect
+          name="version"
+          label="Version"
+          placeholder="Select a version"
+          options={[
+            { value: "Bangla", label: "Bangla" },
+            { value: "English", label: "English" },
+          ]}
+        />
+
+        {/* Shift */}
+        <AppSelect
+          name="shift"
+          label="Shift"
+          placeholder="Select a shift"
+          options={[
+            { value: "Morning", label: "Morning" },
+            { value: "Day", label: "Day" },
+            { value: "Evening", label: "Evening" },
+          ]}
+        />
+
+        {/* Roll */}
         <AppInput
-          name="grade"
-          label="Grade"
-          placeholder="Enter student's grade"
+          name="roll"
+          label="Class Roll"
+          placeholder="Enter student class roll"
+        />
+
+        {/* Father's Name */}
+        <AppInput
+          name="fatherName"
+          label="Father's Name"
+          placeholder="Enter father's name"
+        />
+
+        {/* Father's Phone Number */}
+        <AppInput
+          name="fatherPhone"
+          label="Father's Phone Number"
+          placeholder="Enter father's phone number"
+        />
+
+        {/* Mother's Name */}
+        <AppInput
+          name="motherName"
+          label="Mother's Name"
+          placeholder="Enter mother's name"
+        />
+        {/* Mother's Phone Number */}
+        <AppInput
+          name="motherPhone"
+          label="Mother's Phone Number"
+          placeholder="Enter mother's phone number"
+        />
+        {/* Address */}
+        <AppInput name="address" label="Address" placeholder="Enter Address" />
+
+        {/* Email */}
+        <AppInput name="email" label="Email" placeholder="Enter email" />
+
+        {/* Password */}
+        <AppInputPassword
+          className="w-full mb-4 bg-white border border-blue-400 text-black placeholder-gray-500 focus:ring focus:ring-blue-500 focus:border-blue-500"
+          name="password"
+          label="Password"
+          labelStyles="text-black"
+          placeholder="Enter your password"
         />
       </AppForm>
     </div>

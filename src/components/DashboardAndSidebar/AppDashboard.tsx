@@ -10,23 +10,39 @@ import {
   BreadcrumbList,
 } from "@/components/ui/breadcrumb";
 
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/DashboardAndSidebar/AppSidebar";
 import CustomBreadcrumbLink from "../CustomBreadcrumbLink/CustomBreadcrumbLink";
 import LogoutButton from "../LogoutButton/LogoutButton";
 // import { authKey } from "@/api/authKey";
 import { FaArrowLeft } from "react-icons/fa";
+import { useQueryClient } from "@tanstack/react-query";
+import { authKey } from "@/api/authKey";
+import { useRole } from "@/hooks/useRole";
+import Loader from "../Loader/Loader";
 // import Loader from "../Loader/Loader";
 
 const AppDashboard = () => {
-  const role = "admin";
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const authData = queryClient.getQueryData(authKey);
+  // TODO: Add static role type instead of current void
+  const role = useRole();
+  // While redirecting, role will be undefined, so render nothing
+  if (!role) {
+    navigate("/auth/login");
+    return null; // Prevent further rendering while redirecting
+  }
+  if (!authData) {
+    <Loader />; // Wait until authKey is set
+  }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="font-robotoCondensed">
       <AppSidebar role={role} />
       <SidebarInset>
         {/* <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 "> */}
-        <header className="flex items-center gap-2 px-4 py-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-indigo-400 shadow-lg">
+        <header className="flex items-center gap-2 px-4 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg">
           <SidebarTrigger className="-ml-1 text-black bg-[#a8ecf0]" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <Breadcrumb className=" w-full">

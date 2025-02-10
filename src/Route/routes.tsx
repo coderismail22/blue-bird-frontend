@@ -9,7 +9,6 @@ import { createBrowserRouter } from "react-router-dom";
 import Administration from "@/Pages/Administration/AdministrationPage";
 import AdmissionPage from "@/Pages/AdmissionPage";
 import Dashboard from "@/Pages/Dashboard/Dashboard/Dashboard";
-import AdminHome from "@/Pages/Dashboard/Admin/AdminHome/AdminHome";
 import AllNotice from "@/Pages/Dashboard/Admin/Notice/AllNotice";
 import PublishNotice from "@/Pages/Dashboard/Admin/Notice/PublishNotice";
 import EditNotice from "@/Pages/Dashboard/Admin/Notice/EditNotice";
@@ -17,18 +16,33 @@ import AllEvent from "@/Pages/Dashboard/Admin/Event/AllEvent";
 import PublishEvent from "@/Pages/Dashboard/Admin/Event/PublishEvent";
 import EditEvent from "@/Pages/Dashboard/Admin/Event/EditEvent";
 import AddTeacher from "@/Pages/Dashboard/Admin/Teacher Management/AddTeacher";
-import EditTeacher from "@/Pages/Dashboard/Admin/Student Management/EditStudent";
-import AllTeachers from "@/Pages/Dashboard/Admin/Student Management/AllStudents";
 import RegisterStudent from "@/Pages/Dashboard/Admin/Student Management/RegisterStudent";
 import StudentInfo from "@/Pages/Dashboard/Admin/Student Management/StudentInfo";
-import RoleWrapper from "@/components/Auth/RoleWrapper/RoleWrapper";
-import StudentHome from "@/Pages/Dashboard/Student/StudentHome/StudentHome";
-import { ROLE } from "@/constants/role";
 import AllAdministration from "@/Pages/Dashboard/Admin/Administration/AllAdministration";
 import PublishAdministration from "@/Pages/Dashboard/Admin/Administration/PublishAdministration";
 import EditAdministration from "@/Pages/Dashboard/Admin/Administration/EditAdministration";
 import NoticeBanner from "@/Pages/Dashboard/Admin/NoticeBanner/NoticeBanner";
 import Login from "@/components/Auth/Login/Login";
+import EditStudent from "@/Pages/Dashboard/Admin/Student Management/EditStudent";
+import FullStudentInfo from "@/Pages/Dashboard/Admin/Student Management/FullStudentInfo";
+import AddExam from "@/Pages/Dashboard/Admin/Exam Management/AddExam";
+import TakeAttendance from "@/Pages/Dashboard/AttendanceManagement/TakeAttendance";
+import StudentViewResults from "@/Pages/Dashboard/Admin/ViewResult/StudentViewResult";
+import AddSubject from "@/Pages/Dashboard/Admin/Exam Management/AddSubject";
+import ExamRegistration from "@/Pages/Dashboard/Admin/Exam Management/ExamRegistration";
+import MarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/MarkEntry";
+import TeacherOnlyMarkEntry from "@/Pages/Dashboard/Admin/MarkEntry/TeacherOnlyMarkEntry";
+import ExamRegisteredStudents from "@/Pages/Dashboard/Admin/Exam Management/ViewRegistrations";
+import ReadOnlyResults from "@/Pages/Results";
+import TeacherProfile from "@/Pages/Dashboard/Teacher/TeacherProfile/TeacherProfile";
+import StudentProfile from "@/Pages/Dashboard/Student/StudentProfile/StudentProfile";
+import AdminProfile from "@/Pages/Dashboard/Admin/AdminProfile/AdminProfile";
+import ViewSubjects from "@/Pages/Dashboard/Admin/ViewSubjects/ViewSubjects";
+import ViewExams from "@/Pages/Dashboard/Admin/ViewExams/ViewExams";
+import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import AllTeachers from "@/Pages/Dashboard/Admin/Teacher Management/AllTeachers";
+import EditTeacher from "@/Pages/Dashboard/Admin/Teacher Management/EditTeacher";
+import FullTeacherInfo from "@/Pages/Dashboard/Admin/Teacher Management/FullTeacherInfo";
 
 export const router = createBrowserRouter([
   {
@@ -42,10 +56,6 @@ export const router = createBrowserRouter([
       {
         path: "/about-us",
         element: <AboutUs />,
-      },
-      {
-        path: "/contact",
-        element: <ContactInfo />,
       },
       {
         path: "/gallery",
@@ -63,18 +73,26 @@ export const router = createBrowserRouter([
         path: "/admission",
         element: <AdmissionPage />,
       },
+      {
+        path: "/results",
+        element: <ReadOnlyResults />,
+      },
+      {
+        path: "/contact",
+        element: <ContactInfo />,
+      },
     ],
   },
   {
     path: "/dashboard",
     element: (
-      // <ProtectedRoute>
-      <Dashboard />
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
     ),
     children: [
       // Role: Admin
-      { path: "/dashboard/admin/home", element: <AdminHome /> },
+      { path: "/dashboard/admin/profile", element: <AdminProfile /> },
       // Notice Banner
       { path: "/dashboard/admin/banner-notice", element: <NoticeBanner /> },
       // Notice
@@ -91,6 +109,11 @@ export const router = createBrowserRouter([
         path: "/dashboard/admin/edit-event/:eventId",
         element: <EditEvent />,
       },
+      // Result
+      {
+        path: "/dashboard/student/exam-result",
+        element: <StudentViewResults />,
+      },
       // Administration
       {
         path: "/dashboard/admin/administration",
@@ -105,9 +128,14 @@ export const router = createBrowserRouter([
         element: <EditAdministration />,
       },
       // Teacher Management
+
       {
         path: "/dashboard/admin/teacher-management/create-teacher",
         element: <AddTeacher />,
+      },
+      {
+        path: "/dashboard/admin/teacher-management/full-teacher-info/:teacherId",
+        element: <FullTeacherInfo />,
       },
       {
         path: "/dashboard/admin/teacher-management/edit-teacher/:teacherId",
@@ -126,22 +154,75 @@ export const router = createBrowserRouter([
         path: "/dashboard/admin/student-management/student-info-page",
         element: <StudentInfo />,
       },
+      {
+        path: "/dashboard/admin/student-management/edit-student/:studentId",
+        element: <EditStudent />,
+      },
+      {
+        path: "/dashboard/admin/student-management/full-student-info/:studentId",
+        element: <FullStudentInfo />,
+      },
+      // Exam Management (TODO:Incomplete)
+      {
+        path: "/dashboard/admin/exam-management/add-subject",
+        element: <AddSubject />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/view-subjects",
+        element: <ViewSubjects />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/add-exam",
+        element: <AddExam />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/exam-registration",
+        element: <ExamRegistration />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/exam-registered-students",
+        element: <ExamRegisteredStudents />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/view-exams",
+        element: <ViewExams />,
+      },
+      {
+        path: "/dashboard/admin/exam-management/view-exam-results",
+        element: <ReadOnlyResults />,
+      },
+      // Attendance
+      {
+        path: "/dashboard/admin/attendance-management/take-attendance",
+        element: <TakeAttendance />,
+      },
       // Role: Teacher
+      {
+        path: "/dashboard/teacher/profile",
+        element: <TeacherProfile />,
+      },
+      {
+        path: "/dashboard/teacher/mark-entry",
+        element: <MarkEntry />,
+      },
+      {
+        path: "/dashboard/teacher/teacher-only-mark-entry",
+        element: <TeacherOnlyMarkEntry />,
+      },
+      {
+        path: "/dashboard/see-student-results",
+        element: <ReadOnlyResults />,
+      },
 
       // Role: Student
       {
-        path: "/dashboard/student/home",
-        element: (
-          <RoleWrapper allowedRoles={[ROLE.STUDENT]}>
-            {/* <Cart /> */}
-            <StudentHome />
-          </RoleWrapper>
-        ),
+        path: "/dashboard/student/profile",
+        element: <StudentProfile />, //Use role wrapper if needed
       },
     ],
   },
   {
-    path: "/login",
+    path: "/auth/login",
     element: <Login />,
   },
   {
