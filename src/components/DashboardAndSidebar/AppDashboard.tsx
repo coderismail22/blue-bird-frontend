@@ -32,7 +32,7 @@ const AppDashboard = () => {
 
   // TODO: Add static role type instead of current void
   const role = useRole();
-  if (role == undefined) {
+  if (!role) {
     return <Loader />;
   }
 

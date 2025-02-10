@@ -6,8 +6,11 @@ import { handleAxiosError } from "@/utils/handleAxiosError";
 import { AxiosError } from "axios";
 import "../../../../styles/swal.css";
 import { Button } from "@/components/ui/button";
+import { authKey } from "@/api/authKey";
 
 // Save student mark
+// TODO: Add a type here
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const saveStudentMarks = async (payload: any) => {
   const response = await axiosInstance.post(
     "/exam-results/create-or-update",
@@ -42,8 +45,9 @@ const fetchResults = async ({ queryKey }) => {
 };
 
 const TeacherOnlyMarkEntry = () => {
-  const teacherId = "67a0ac5f0aef8cec2bf215a7"; // TODO: get teacherId after login
   const queryClient = useQueryClient();
+  const authData = queryClient.getQueryData<{ teacherId: string }>(authKey);
+  const teacherId = authData?.teacherId || ""; // from context or local storage
 
   // States for dropdowns
   const [years, setYears] = useState<string[]>([]);
@@ -441,11 +445,11 @@ const TeacherOnlyMarkEntry = () => {
             <option value="">Choose a subject</option>
             {subjects?.map((subject) => (
               <option
-                key={subject._id}
-                value={subject._id}
-                data-teacher-id={subject.subjectTeacher._id}
+                key={subject?._id}
+                value={subject?._id}
+                data-teacher-id={subject?.subjectTeacher?._id}
               >
-                {subject.name} | {subject.subjectTeacher.name}
+                {subject?.name} | {subject?.subjectTeacher?.name}
               </option>
             ))}
           </select>

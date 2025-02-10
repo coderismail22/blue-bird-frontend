@@ -5,9 +5,6 @@ import axiosInstance from "@/api/axiosInstance";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-interface AuthState {
-  studentId: string;
-}
 
 interface IStudent {
   year: string;
@@ -20,7 +17,7 @@ interface IStudent {
 
 function StudentViewResults() {
   const queryClient = useQueryClient();
-  const authData = queryClient.getQueryData<AuthState>(authKey);
+  const authData = queryClient.getQueryData<{ studentId: string }>(authKey);
   const studentId = authData?.studentId || ""; // from context or local storage
 
   const [exams, setExams] = useState<any[]>([]); //when student comes to this page auto load the exam matching exam list
