@@ -1,30 +1,60 @@
 // TODO: Add multiple types
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { authKey } from "@/api/authKey";
 import axiosInstance from "@/api/axiosInstance";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
+interface AuthState {
+  studentId: string;
+}
+
+interface IStudent {
+  year: string;
+  version: string;
+  class: string;
+  shift: string;
+  section: string;
+  group: string;
+}
+
 function StudentViewResults() {
-  const studentId = "67a363db9868419454df54b7"; // from context or local storage
-  const name = "Ismail"; // from context or local storage
+  const queryClient = useQueryClient();
+  const authData = queryClient.getQueryData<AuthState>(authKey);
+  const studentId = authData?.studentId || ""; // from context or local storage
+
   const [exams, setExams] = useState<any[]>([]); //when student comes to this page auto load the exam matching exam list
   const [selectedExamId, setSelectedExamId] = useState(""); // when student picks an exam
   const [results, setResults] = useState<any[]>([]); // fetches and sets the result for the selected exam
   const [examInfo, setExamInfo] = useState<any>(null); // fetches and sets the subject details for the selected exam
 
   useEffect(() => {
-    // 1) Based on the student's profile (year, version, class, shift, etc.),
-    // fetch matching exams.
-    // For example, if student is year=2025, version=Bangla, class=10, shift=Morning, section=A, group=Science
+    if (!studentId) return;
+
+    // Fetch student details
     axiosInstance
-      .get(
-        "/exams?year=2026&version=Bangla&class=7&shift=Morning&section=A&group=NA"
-      )
+      .get(`/students/${studentId}`)
       .then((res) => {
-        // console.log("initial response", res.data.data);
-        setExams(res.data.data || []);
+        const studentData: IStudent = res.data.data;
+        const {
+          year,
+          version,
+          class: studentClass,
+          shift,
+          section,
+          group,
+        } = studentData;
+
+        // Construct exams API URL dynamically
+        const examsUrl = `/exams?year=${year}&version=${version}&class=${studentClass}&shift=${shift}&section=${section}&group=${group}`;
+
+        return axiosInstance.get(examsUrl);
+      })
+      .then((res) => {
+        setExams(res?.data?.data || []);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [studentId]);
 
   // When the student picks an exam
   async function handleSelectExam(examId: string) {
@@ -33,28 +63,18 @@ function StudentViewResults() {
     // 2) Optionally fetch the exam doc for subject details
     const examRes = await axiosInstance.get(`/exams/${examId}`);
     setExamInfo(examRes.data.data);
-    // console.log("🚀 examRes", examRes.data.data);
 
     // 3) Then fetch the results for that exam + this student
     const resultRes = await axiosInstance.get(
       `/exam-results?examId=${examId}&studentId=${studentId}`
     );
-    // console.log("🚀 resultRes:", resultRes.data.data);
     setResults(resultRes.data.data);
   }
 
-  // Merge logic: if examInfo has subjects, match them with results
-  {
-    console.log("examInfo", examInfo);
-  }
-  {
-    console.log("results", results);
-  }
   const mergedSubjects =
     examInfo?.subjects?.map((sub: any) => {
       const found = results.find((r: any) => r.examSubjectId._id === sub._id);
-      console.log("spread subject", { ...sub });
-      console.log("found marks", found?.marks);
+
       return {
         ...sub,
         marks: found?.marks || null,
@@ -63,7 +83,9 @@ function StudentViewResults() {
 
   return (
     <div>
-      <p className="text-center text-2xl mb-5">Welcome, {name}</p>
+      <p className="text-center text-2xl mb-5 text-blue-500 underline underline-offset-8">
+        See Your Results
+      </p>
 
       {/* Dropdown of student's available exams */}
       <div className="max-w-md">
@@ -102,7 +124,6 @@ function StudentViewResults() {
               </tr>
             </thead>
             <tbody>
-              {console.log("merged subjects", mergedSubjects)}
               {mergedSubjects.map((s: any) => (
                 <tr key={s._id} className="text-center">
                   <td className="p-2 border">{s.name}</td>

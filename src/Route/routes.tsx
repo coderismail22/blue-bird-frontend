@@ -109,11 +109,7 @@ export const router = createBrowserRouter([
         path: "/dashboard/admin/edit-event/:eventId",
         element: <EditEvent />,
       },
-      // Result
-      {
-        path: "/dashboard/student/exam-result",
-        element: <StudentViewResults />,
-      },
+
       // Administration
       {
         path: "/dashboard/admin/administration",
@@ -218,6 +214,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/student/profile",
         element: <StudentProfile />, //Use role wrapper if needed
+      },
+      {
+        path: "/dashboard/student/exam-result",
+        element: <StudentViewResults />,
       },
     ],
   },

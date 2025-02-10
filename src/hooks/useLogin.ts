@@ -13,14 +13,22 @@ import { handleAxiosError } from "@/utils/handleAxiosError";
 import "../styles/swal.css";
 
 type DecodedToken = {
+  userId: string;
   role: Role;
   email: string;
+  adminId: string;
+  teacherId: string;
+  studentId: string;
 };
 
 export type AuthState = {
   accessToken: string;
+  userId: string;
   role: Role;
   email: string;
+  adminId: string;
+  teacherId: string;
+  studentId: string;
 };
 
 export type TLoginResponse = {
@@ -32,6 +40,15 @@ export type TLoginResponse = {
   };
 };
 
+let authState = {
+  accessToken: "",
+  adminId: "",
+  teacherId: "",
+  studentId: "",
+  userId: "",
+  email: "",
+  role: "",
+};
 export const useLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,19 +71,53 @@ export const useLogin = () => {
       const decodedToken: DecodedToken = jwtDecode(data?.data?.accessToken);
       // console.log(decodedToken);
       // console.log(decodedToken?.role);
+      console.log("decoded token", decodedToken);
 
       // Save the accessToken and role in TanStack Query state
-      const authState: AuthState = {
-        accessToken: data.data.accessToken,
-        email: decodedToken.email,
-        role: decodedToken.role,
-      };
+
+      // role wise id adding
+      if (decodedToken.role === "admin") {
+        authState = {
+          ...authState,
+          accessToken: data.data.accessToken,
+          userId: decodedToken.userId,
+          email: decodedToken.email,
+          role: decodedToken.role,
+        };
+      } else if (decodedToken.role === "student") {
+        authState = {
+          ...authState,
+          accessToken: data.data.accessToken,
+          userId: decodedToken.userId,
+          email: decodedToken.email,
+          role: decodedToken.role,
+          studentId: decodedToken.studentId,
+        };
+      } else if (decodedToken.role === "teacher") {
+        authState = {
+          ...authState,
+          accessToken: data.data.accessToken,
+          userId: decodedToken.userId,
+          email: decodedToken.email,
+          role: decodedToken.role,
+          teacherId: decodedToken.teacherId,
+        };
+      }
+
       // Tanstack cache
       queryClient.setQueryData(authKey, authState);
 
       // Fallback: Set the token in localStorage for persistence across sessions
       // TODO: This one is working not tanstack query neither persist
       localStorage.setItem("accessToken", data?.data?.accessToken);
+
+      // Current Bug:
+      // 1. The user is logged out when the page is refreshed occasionally.
+      // 2. queryClient.setQueryData(authKey, authState);
+      // 3. localStorage.setItem("accessToken", data?.data?.accessToken);
+      // 4. I can't access the dashboard if i remove/disable any of the 2 or 3 steps.
+      // 5. What's wrong with the app ?
+      // 6. I can't refresh the page and the user is logged out. Why this sudden logout is happening ? It ruining the user experience.
 
       Swal.fire({
         icon: "success",

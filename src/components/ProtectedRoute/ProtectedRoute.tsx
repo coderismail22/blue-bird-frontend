@@ -10,7 +10,15 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     accessToken: string;
     role: string;
   }>(authKey);
-
+  
+  if (authData === undefined) {
+    // Add a loading state while authentication state is being reloaded
+    return (
+      <div className="h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
   // Test 1
   if (!authData?.accessToken) {
     Swal.fire({
@@ -19,6 +27,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       text: "No valid auth data found.",
     });
   }
+
   // Test 2
   if (!authData?.role) {
     Swal.fire({
@@ -27,6 +36,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       text: "No role found.",
     });
   }
+
   // Redirect to login if accessToken doesn't exist
   // if (!authData?.accessToken || !authData?.role) {
   //   return (

@@ -13,7 +13,7 @@ export const useRole = (): Role | void => {
   const queryClient = useQueryClient();
   // const authData = queryClient.getQueryData<{ accessToken: string }>(authKey);
   const authData = queryClient.getQueryData<AuthState>(authKey);
-  // console.log("auth data from useRole", authData);
+  console.log("auth data from useRole", authData);
 
   // If no auth data exists, assume no role (or redirect)
   if (!authData?.accessToken || !authData?.role) {

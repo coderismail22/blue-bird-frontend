@@ -167,7 +167,7 @@ const TeacherOnlyMarkEntry = () => {
         return acc;
       }, {});
 
-      const combinedStudents = registeredStudents.map((registration) => ({
+      const combinedStudents = registeredStudents?.map((registration) => ({
         ...registration,
         marks: studentMarksMap[registration.studentId._id] || {},
       }));
@@ -278,7 +278,7 @@ const TeacherOnlyMarkEntry = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
           >
             <option value="">Select Year</option>
-            {years.map((year) => (
+            {years?.map((year) => (
               <option key={year} value={year}>
                 {year}
               </option>
@@ -302,7 +302,7 @@ const TeacherOnlyMarkEntry = () => {
             }`}
           >
             <option value="">Select Version</option>
-            {versions.map((version) => (
+            {versions?.map((version) => (
               <option key={version} value={version}>
                 {version}
               </option>
@@ -326,7 +326,7 @@ const TeacherOnlyMarkEntry = () => {
             }`}
           >
             <option value="">Select Class</option>
-            {classes.map((className) => (
+            {classes?.map((className) => (
               <option key={className} value={className}>
                 {className}
               </option>
@@ -350,7 +350,7 @@ const TeacherOnlyMarkEntry = () => {
             }`}
           >
             <option value="">Select Shift</option>
-            {shifts.map((shift) => (
+            {shifts?.map((shift) => (
               <option key={shift} value={shift}>
                 {shift}
               </option>
@@ -374,7 +374,7 @@ const TeacherOnlyMarkEntry = () => {
             }`}
           >
             <option value="">Select Section</option>
-            {sections.map((section) => (
+            {sections?.map((section) => (
               <option key={section} value={section}>
                 {section}
               </option>
@@ -394,7 +394,7 @@ const TeacherOnlyMarkEntry = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
             >
               <option value="">Select Group</option>
-              {groups.map((group) => (
+              {groups?.map((group) => (
                 <option key={group} value={group}>
                   {group}
                 </option>
@@ -439,7 +439,7 @@ const TeacherOnlyMarkEntry = () => {
             }`}
           >
             <option value="">Choose a subject</option>
-            {subjects.map((subject) => (
+            {subjects?.map((subject) => (
               <option
                 key={subject._id}
                 value={subject._id}
@@ -462,14 +462,13 @@ const TeacherOnlyMarkEntry = () => {
               <th className="p-2 border">MCQ</th>
               <th className="p-2 border">CQ</th>
               <th className="p-2 border">Practical</th>
-              <th className="p-2 border">Plain</th>
               <th className="p-2 border">Submit</th>
             </tr>
           </thead>
           {/* Body */}
           <tbody>
-            {students.map((student) => {
-              const stu = student.studentId;
+            {students?.map((student) => {
+              const stu = student?.studentId;
               const marks = marksData[stu._id] || {};
 
               return (
@@ -478,7 +477,7 @@ const TeacherOnlyMarkEntry = () => {
                   <td className="p-2 border text-center">
                     <input
                       value={marks.mcqMark || 0}
-                      className="text-center"
+                      className="text-center bg-white"
                       onChange={(e) =>
                         handleMarkChange(
                           stu._id,
@@ -491,7 +490,7 @@ const TeacherOnlyMarkEntry = () => {
                   <td className="p-2 border text-center">
                     <input
                       value={marks.cqMark || 0}
-                      className="text-center"
+                      className="text-center bg-white"
                       onChange={(e) =>
                         handleMarkChange(
                           stu._id,
@@ -504,7 +503,7 @@ const TeacherOnlyMarkEntry = () => {
                   <td className="p-2 border text-center">
                     <input
                       value={marks.practicalMark || 0}
-                      className="text-center"
+                      className="text-center bg-white"
                       onChange={(e) =>
                         handleMarkChange(
                           stu._id,
@@ -514,19 +513,7 @@ const TeacherOnlyMarkEntry = () => {
                       }
                     />
                   </td>
-                  <td className="p-2 border text-center">
-                    <input
-                      value={marks.plainMark || 0}
-                      className="text-center"
-                      onChange={(e) =>
-                        handleMarkChange(
-                          stu._id,
-                          "plainMark",
-                          Number(e.target.value)
-                        )
-                      }
-                    />
-                  </td>
+
                   <td className="p-2 text-center">
                     <Button
                       className=" bg-blue-500 hover:bg-blue-400 text-white rounded"
