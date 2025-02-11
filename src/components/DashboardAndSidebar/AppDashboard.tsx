@@ -67,7 +67,7 @@ const AppDashboard = () => {
           </Breadcrumb>
         </header>
         <div
-          // className=" bg-[#e2f0f1] min-h-screen"
+          className=" bg-[#e2f0f1] min-h-screen"
           style={{
             backgroundImage: "url('/dashboard-bg-1.png')",
             backgroundSize: "cover", // Makes the image cover the full container

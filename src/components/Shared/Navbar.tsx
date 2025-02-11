@@ -119,7 +119,9 @@ const Navbar = () => {
                         className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white rounded-box w-52"
                       >
                         <li>
-                          <Link to="/dashboard">Dashboard</Link>
+                          <Link to={`/dashboard/${role}/profile`}>
+                            Dashboard
+                          </Link>
                         </li>
                         <li>
                           <div onClick={handleLogOut}>Logout</div>
@@ -147,7 +149,9 @@ const Navbar = () => {
                         className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white rounded-box w-52"
                       >
                         <li>
-                          <Link to="/dashboard/student/home">Dashboard</Link>
+                          <Link to={`/dashboard/${role}/profile`}>
+                            Dashboard
+                          </Link>
                         </li>
                         <li>
                           <div onClick={handleLogOut}>Logout</div>
@@ -217,7 +221,7 @@ const Navbar = () => {
                       {user.name}
                     </p> */}
                     <NavLink
-                      to="/dashboard"
+                      to={`/dashboard/${role}/profile`}
                       className="block px-4 py-2 text-sm hover:bg-gray-100"
                     >
                       Dashboard
@@ -273,7 +277,7 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <>
                   <NavLink
-                    to="/dashboard"
+                    to={`/dashboard/${role}/profile`}
                     className="text-white hover:text-gray-400"
                     onClick={toggleMenu}
                   >
