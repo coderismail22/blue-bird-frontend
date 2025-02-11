@@ -10,15 +10,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     accessToken: string;
     role: string;
   }>(authKey);
-  
-  if (authData === undefined) {
-    // Add a loading state while authentication state is being reloaded
-    return (
-      <div className="h-screen flex items-center justify-center text-white">
-        Loading...
-      </div>
-    );
-  }
+
   // Test 1
   if (!authData?.accessToken) {
     Swal.fire({
@@ -38,11 +30,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Redirect to login if accessToken doesn't exist
-  // if (!authData?.accessToken || !authData?.role) {
-  //   return (
-  //     <Navigate to="/auth/login" state={{ from: location.pathname }} replace />
-  //   );
-  // }
+  if (!authData?.accessToken || !authData?.role) {
+    return (
+      <Navigate to="/auth/login" state={{ from: location.pathname }} replace />
+    );
+  }
 
   return <>{children}</>;
 };

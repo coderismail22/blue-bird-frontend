@@ -73,10 +73,10 @@ export const router = createBrowserRouter([
         path: "/admission",
         element: <AdmissionPage />,
       },
-      {
-        path: "/results",
-        element: <ReadOnlyResults />,
-      },
+      // {
+      //   path: "/results",
+      //   element: <ReadOnlyResults />,
+      // },
       {
         path: "/contact",
         element: <ContactInfo />,

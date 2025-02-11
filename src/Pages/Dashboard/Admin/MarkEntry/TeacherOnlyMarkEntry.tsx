@@ -16,7 +16,7 @@ const saveStudentMarks = async (payload: any) => {
     "/exam-results/create-or-update",
     payload
   );
-  return response.data;
+  return response?.data;
 };
 
 // Fetch exams dynamically based on filters
@@ -24,7 +24,7 @@ const fetchExams = async (queryParams: string) => {
   const response = await axiosInstance.get(
     `/exams/teacher-only-exams?${queryParams}`
   );
-  return response.data.data;
+  return response?.data?.data;
 };
 
 // Fetch students and results
@@ -33,7 +33,7 @@ const fetchStudents = async ({ queryKey }) => {
   const response = await axiosInstance.get(
     `/exam-registrations?examId=${examId}`
   );
-  return response.data.data;
+  return response?.data?.data;
 };
 
 const fetchResults = async ({ queryKey }) => {
