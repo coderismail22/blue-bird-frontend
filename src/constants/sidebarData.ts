@@ -250,7 +250,7 @@ export const sidebarData = {
     {
       icon: FaPeopleGroup,
       label: "Attendance",
-      path: "/dashboard/admin/attendance-management/take-attendance",
+      path: "/dashboard/teacher/take-attendance",
     },
     {
       icon: MdOutlineNoteAlt,

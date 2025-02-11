@@ -5,7 +5,6 @@ import axiosInstance from "@/api/axiosInstance";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-
 interface IStudent {
   year: string;
   version: string;
@@ -111,24 +110,30 @@ function StudentViewResults() {
           <table className="w-full mt-6 border border-gray-300">
             <thead className="bg-gray-100">
               <tr>
-                <th className="p-2 border">Subject</th>
-                <th className="p-2 border">MCQ</th>
-                <th className="p-2 border">CQ</th>
-                <th className="p-2 border">Practical</th>
-                <th className="p-2 border">Plain</th>
-                <th className="p-2 border">Total</th>
+                <th className="p-2 border text-center">Subject</th>
+                <th className="p-2 border text-center">MCQ</th>
+                <th className="p-2 border text-center">CQ</th>
+                <th className="p-2 border text-center">Practical</th>
+                <th className="p-2 border text-center">Total</th>
                 {/* <th className="p-2 border">Grade (Optional)</th> */}
               </tr>
             </thead>
             <tbody>
               {mergedSubjects.map((s: any) => (
                 <tr key={s._id} className="text-center">
-                  <td className="p-2 border">{s.name}</td>
-                  <td className="p-2 border">{s.marks?.mcqMark ?? 0}</td>
-                  <td className="p-2 border">{s.marks?.cqMark ?? 0}</td>
-                  <td className="p-2 border">{s.marks?.practicalMark ?? 0}</td>
-                  <td className="p-2 border">{s.marks?.plainMark ?? 0}</td>
-                  <td className="p-2 border">{s.marks?.totalMark ?? 0}</td>
+                  <td className="p-2 border text-center">{s.name}</td>
+                  <td className="p-2 border text-center">
+                    {s.marks?.mcqMark ?? 0}
+                  </td>
+                  <td className="p-2 border text-center">
+                    {s.marks?.cqMark ?? 0}
+                  </td>
+                  <td className="p-2 border text-center">
+                    {s.marks?.practicalMark ?? 0}
+                  </td>
+                  <td className="p-2 border text-center">
+                    {s.marks?.totalMark ?? 0}
+                  </td>
                   {/* <td className="p-2 border">Grade</td> */}
                 </tr>
               ))}

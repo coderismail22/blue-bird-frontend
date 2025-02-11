@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const MarkTable = ({
   students,
   marksData,
@@ -7,23 +10,24 @@ export const MarkTable = ({
   <table className="w-full mt-6 border border-gray-300">
     <thead className="bg-gray-100">
       <tr>
-        <th className="p-2 border">Student Name</th>
-        <th className="p-2 border">MCQ</th>
-        <th className="p-2 border">CQ</th>
-        <th className="p-2 border">Practical</th>
-        <th className="p-2 border">Plain</th>
-        <th className="p-2 border">Submit</th>
+        <th className="p-2 border text-center">Student Name</th>
+        <th className="p-2 border text-center">MCQ</th>
+        <th className="p-2 border text-center">CQ</th>
+        <th className="p-2 border text-center">Practical</th>
+        <th className="p-2 border text-center">Plain</th>
+        <th className="p-2 border text-center">Submit</th>
       </tr>
     </thead>
     <tbody>
+      {/* TODO: Add type here */}
       {students.map((student: any) => {
         const stu = student.studentId;
         const marks = marksData[stu._id] || {};
 
         return (
           <tr key={stu._id}>
-            <td className="p-2 border">{stu.name}</td>
-            <td className="p-2 border">
+            <td className="p-2 border text-center">{stu.name}</td>
+            <td className="p-2 border text-center">
               <input
                 value={marks.mcqMark || 0}
                 onChange={(e) =>
@@ -31,7 +35,7 @@ export const MarkTable = ({
                 }
               />
             </td>
-            <td className="p-2 border">
+            <td className="p-2 border text-center">
               <input
                 value={marks.cqMark || 0}
                 onChange={(e) =>
@@ -39,7 +43,7 @@ export const MarkTable = ({
                 }
               />
             </td>
-            <td className="p-2 border">
+            <td className="p-2 border text-center">
               <input
                 value={marks.practicalMark || 0}
                 onChange={(e) =>
@@ -47,7 +51,7 @@ export const MarkTable = ({
                 }
               />
             </td>
-            <td className="p-2 border">
+            <td className="p-2 border text-center">
               <input
                 value={marks.plainMark || 0}
                 onChange={(e) =>

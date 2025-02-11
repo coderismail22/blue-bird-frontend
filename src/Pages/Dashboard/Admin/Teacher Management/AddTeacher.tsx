@@ -75,7 +75,6 @@ const AddTeacher = () => {
     };
 
     mutation.mutate(finalData);
-    // console.log(finalData);
   };
 
   return (

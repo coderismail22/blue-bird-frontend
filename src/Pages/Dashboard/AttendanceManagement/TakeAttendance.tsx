@@ -2,14 +2,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "@/api/axiosInstance";
-import { Button } from "@/components/ui/button";
 import CustomDateInput from "./CustomDateInput";
 import Swal from "sweetalert2";
-
+import "../../../styles/swal.css";
 const YEARS = ["2025", "2026", "2027", "2028", "2029", "2030"];
 const VERSIONS = ["Bangla", "English"];
-const CLASSES = ["6", "7", "8", "9", "10", "11", "12"];
-const SECTIONS = ["A", "B", "C", "D"];
+const CLASSES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+const SECTIONS = ["A", "B", "C", "D", "E", "F"];
 const SHIFTS = ["Morning", "Day", "Evening"];
 const GROUPS = ["Science", "Commerce", "Arts", "NA"];
 
@@ -20,7 +19,7 @@ interface ILoadForm {
   class: string;
   section: string;
   group: "Science" | "Commerce" | "Arts" | "NA";
-  date: string; // e.g., "2025-01-31"
+  date: string;
 }
 
 interface IAttendanceFrontend {
@@ -48,12 +47,12 @@ const TakeAttendance: React.FC = () => {
     // If you need formState: { errors }, etc.
   } = useForm<ILoadForm>({
     defaultValues: {
-      year: "2026",
-      version: "Bangla",
-      shift: "Day",
-      class: "9",
-      section: "A",
-      group: "Science",
+      year: "",
+      version: "",
+      shift: "",
+      class: "",
+      section: "",
+      group: "",
       date: "",
     },
   });
@@ -76,10 +75,17 @@ const TakeAttendance: React.FC = () => {
       !formData.group ||
       !formData.date
     ) {
-      alert(
-        "All fields (Year, Version, Shift, Class, Section, Group, Date) are required!"
-      );
-      // TODO: Add swal here
+      Swal.fire({
+        icon: "info",
+        title: "Failed",
+        text: "All the fields are required!",
+        customClass: {
+          title: "custom-title",
+          popup: "custom-popup",
+          icon: "custom-icon",
+          confirmButton: "custom-confirm-btn",
+        },
+      });
       return;
     }
 
@@ -89,10 +95,14 @@ const TakeAttendance: React.FC = () => {
 
       // Format data for easy display
       const formatted: IAttendanceFrontend[] = dataFromServer.map(
+        // TODO: Add type here
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (item: any) => ({
           _id: item?.studentDoc?._id,
           student:
-            typeof item?.student === "object" ? item.student._id : item.student,
+            typeof item?.student === "object"
+              ? item?.student?._id
+              : item?.student,
           roll: item?.studentDoc?.roll || "",
           date: item?.date,
           year: item?.year,
@@ -130,13 +140,33 @@ const TakeAttendance: React.FC = () => {
   const onSaveAttendance = async () => {
     try {
       await axiosInstance.patch("/attendance", attendanceData);
-      alert("Attendance updated successfully!");
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Attendance updated successfully!",
+        customClass: {
+          title: "custom-title",
+          popup: "custom-popup",
+          icon: "custom-icon",
+          confirmButton: "custom-confirm-btn",
+        },
+      });
 
       // Immediately refetch with the same form data:
       onLoadAttendance(watchFilters);
     } catch (error) {
       console.error(error);
-      alert("Failed to save attendance!");
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Attendance update failed!",
+        customClass: {
+          title: "custom-title",
+          popup: "custom-popup",
+          icon: "custom-icon",
+          confirmButton: "custom-confirm-btn",
+        },
+      });
     }
   };
 
@@ -161,6 +191,7 @@ const TakeAttendance: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
               {...register("year")}
             >
+              <option value="">Select Year</option>
               {YEARS.map((y) => (
                 <option key={y} value={y}>
                   {y}
@@ -177,6 +208,8 @@ const TakeAttendance: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
               {...register("version")}
             >
+              <option value="">Select Version</option>
+
               {VERSIONS.map((v) => (
                 <option key={v} value={v}>
                   {v}
@@ -194,6 +227,7 @@ const TakeAttendance: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
               {...register("shift")}
             >
+              <option value="">Select Shift</option>
               {SHIFTS.map((s) => (
                 <option key={s} value={s}>
                   {s}
@@ -211,6 +245,8 @@ const TakeAttendance: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
               {...register("class")}
             >
+              <option value="">Select Class</option>
+
               {CLASSES.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -227,6 +263,8 @@ const TakeAttendance: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
               {...register("section")}
             >
+              <option value="">Select Section</option>
+
               {SECTIONS.map((sec) => (
                 <option key={sec} value={sec}>
                   {sec}
@@ -244,6 +282,7 @@ const TakeAttendance: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white hover:shadow-md"
               {...register("group")}
             >
+              <option value="">Select Group</option>
               {GROUPS.map((g) => (
                 <option key={g} value={g}>
                   {g}
@@ -256,10 +295,10 @@ const TakeAttendance: React.FC = () => {
           {/* Use the DateInput component */}
         </div>
 
-        <div className="my-5">
+        <div className="my-5 flex items-center justify-center">
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 text-white px-6 py-2 rounded"
           >
             Load
           </button>
@@ -271,45 +310,43 @@ const TakeAttendance: React.FC = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr className="border">
-              <th className="border p-2">Prime ID</th>
-              <th className="border p-2">Custom ID</th>
-              <th className="border p-2">Roll</th>
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Present</th>
-              <th className="border p-2">Absent</th>
-              <th className="border p-2">Late</th>
-              <th className="border p-2">Leave</th>
+              <th className="border p-2 text-center">SID</th>
+              <th className="border p-2 text-center">Roll</th>
+              <th className="border p-2 text-center">Name</th>
+              <th className="border p-2 text-center">Present</th>
+              <th className="border p-2 text-center">Absent</th>
+              <th className="border p-2 text-center">Late</th>
+              <th className="border p-2 text-center">Leave</th>
             </tr>
           </thead>
           <tbody>
             {attendanceData.map((item, idx) => (
               <tr key={idx} className="border">
-                <td className="border p-2">{item?._id}</td>
-                <td className="border p-2">{item?.studentId}</td>
-                <td className="border p-2">{item?.roll || "NA"}</td>
-                <td className="border p-2">{item?.studentName}</td>
-                <td className="border p-2">
+                <td className="border p-2 text-center">{item?.studentId}</td>
+                <td className="border p-2 text-center">{item?.roll || "NA"}</td>
+                <td className="border p-2 text-center">{item?.studentName}</td>
+                <td className="border p-2 text-center">
                   <input
                     type="checkbox"
                     checked={item.status === "present"}
                     onChange={() => handleStatusChange(idx, "present")}
                   />
                 </td>
-                <td className="border p-2">
+                <td className="border p-2 text-center">
                   <input
                     type="checkbox"
                     checked={item.status === "absent"}
                     onChange={() => handleStatusChange(idx, "absent")}
                   />
                 </td>
-                <td className="border p-2">
+                <td className="border p-2 text-center">
                   <input
                     type="checkbox"
                     checked={item.status === "late"}
                     onChange={() => handleStatusChange(idx, "late")}
                   />
                 </td>
-                <td className="border p-2">
+                <td className="border p-2 text-center">
                   <input
                     type="checkbox"
                     checked={item.status === "leave"}
@@ -325,14 +362,16 @@ const TakeAttendance: React.FC = () => {
         <p className="text-center text-red-500">No Students Found</p>
       )}
       {/* Save Button */}
-      {attendanceData.length > 0 && (
-        <button
-          onClick={onSaveAttendance}
-          className="bg-green-600 text-white px-4 py-2 mt-4 rounded"
-        >
-          Save
-        </button>
-      )}
+      <div className="flex items-center justify-center">
+        {attendanceData.length > 0 && (
+          <button
+            onClick={onSaveAttendance}
+            className=" bg-green-600 text-white px-6 py-2 mt-4 rounded"
+          >
+            Save
+          </button>
+        )}
+      </div>
     </div>
   );
 };

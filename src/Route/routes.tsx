@@ -198,6 +198,10 @@ export const router = createBrowserRouter([
         element: <TeacherProfile />,
       },
       {
+        path: "/dashboard/teacher/take-attendance",
+        element: <TakeAttendance />,
+      },
+      {
         path: "/dashboard/teacher/mark-entry",
         element: <MarkEntry />,
       },

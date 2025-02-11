@@ -441,12 +441,12 @@ const TeacherOnlyMarkEntry = () => {
           {/* Header */}
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-2 border">Student Name</th>
-              <th className="p-2 border">MCQ</th>
-              <th className="p-2 border">CQ</th>
-              <th className="p-2 border">Practical</th>
-              <th className="p-2 border">Plain</th>
-              <th className="p-2 border">Submit</th>
+              <th className="p-2 border text-center">Student Name</th>
+              <th className="p-2 border text-center">MCQ</th>
+              <th className="p-2 border text-center">CQ</th>
+              <th className="p-2 border text-center">Practical</th>
+              <th className="p-2 border text-center">Plain</th>
+              <th className="p-2 border text-center">Submit</th>
             </tr>
           </thead>
           {/* Body */}
